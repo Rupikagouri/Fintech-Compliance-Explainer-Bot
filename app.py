@@ -64,8 +64,10 @@ html, body, [class*="css"] {
 /* ── Streamlit app chrome ───────────────────────────────────────── */
 .stApp { background-color: var(--paper) !important; }
 
-/* ── Hide default Streamlit header/footer ───────────────────────── */
-#MainMenu, footer, header { visibility: hidden; }
+/* Keep Streamlit's header visible so its built-in sidebar toggle works. */
+#MainMenu, footer { visibility: hidden; }
+header[data-testid="stHeader"] { background: transparent !important; }
+button[data-testid="collapsedControl"] { visibility: visible !important; display: flex !important; }
 
 /* ── Sidebar ────────────────────────────────────────────────────── */
 [data-testid="stSidebar"] {
