@@ -1,0 +1,57 @@
+DOCUMENT_ID: IN-FINTECH-04
+TITLE: Payment State Machines, Timeouts, Failures, Refunds, and Recovery
+DOMAIN: Payment operations
+SUBDOMAIN: state model, retries, exceptions, customer support
+COUNTRY: India
+APPLICABILITY: Rail-agnostic state model with rail-specific regulatory examples
+LAST_VERIFIED: 2026-10-09; dates and TATs must be checked against current rail rules
+SOURCE_URLS: https://www.rbi.org.in/commonman/Upload/English/Notification/PDFs/CIRCULAR677EC931A7A65E4D99AA957D8E85BC0A2A.PDF | https://www.npci.org.in/what-we-do/upi/faqs | https://cms.rbi.org.in/
+KEY_TERMS: initiated, accepted, pending, authorized, posted, settled, failed, reversed, refunded, chargeback, idempotency, timeout, eventual consistency
+RELATED_DOCUMENTS: 02_payment_rails.txt, 03_merchant_and_card_processing.txt, 05_settlement_reconciliation.txt, 06_fintech_api_architecture.txt, 07_ledger_and_accounting_entries.txt
+---
+
+WHY STATUS IS HARD
+A FinTech payment touches systems that commit at different times. The app, gateway, network, issuer bank, recipient/acquirer, ledger, settlement process and merchant order system each own part of state. Network messages are asynchronous; status events can be delayed, repeated, lost or reordered. “Pending” normally means the caller does not yet have a final reliable result. It does not prove success, failure, or absence of a debit.
+
+RECOMMENDED INTERNAL STATE MODEL (ILLUSTRATIVE)
+CREATED -> VALIDATED -> SUBMITTED -> ACCEPTED/PENDING -> AUTHORIZED or PROCESSING -> SUCCEEDED / DECLINED / FAILED.
+Additional independent states: SETTLEMENT_PENDING -> SETTLED; REFUND_REQUESTED -> REFUNDED; DISPUTED -> REPRESENTMENT -> WON/LOST. REVERSED is a compensating financial event linked to original transaction, not a destructive edit of the original state.
+Do not force every rail into one linear path. A UPI bank transfer, a card authorization/capture, NACH mandate debit and RTGS settlement have different state transitions. Store rail and event type with status.
+
+DATA TO PERSIST
+Internal payment ID; client/order ID; idempotency key; rail; amount in integer paise; currency (INR); payer/payee references tokenized or masked; request timestamp; response/event timestamps; provider/issuer/acquirer references; raw status code mapped to normalized status; source system; callback event ID; settlement batch/reference; refund/dispute IDs; retry count; and immutable audit timestamps. Keep raw personal data only as permitted and necessary. Never store PIN, CVV, OTP, bearer token or secrets in ordinary transaction logs.
+
+TIMEOUT AND RETRY PROCEDURE
+1. Client creates an idempotency key stable for the intended business operation.
+2. Server durably stores payment attempt before transmitting.
+3. If request times out, mark outcome UNKNOWN/PENDING and keep original request ID.
+4. Query participant status endpoint using original reference/idempotency key; process signed callback if received.
+5. Retry only if provider contract permits, with the same idempotency key. Exponential backoff with jitter applies to transient transport failures, not business declines. Cap retries and route unresolved state to an exception queue.
+6. Reconcile participant report and customer ledger. Escalate by rail TAT and preserve evidence.
+Without provider-side idempotency, a client cannot guarantee exactly-once external money movement. It can make local commands idempotent, detect duplicates, and reconcile uncertain outcomes.
+
+FAILURE TAXONOMY
+Pre-validation rejection: malformed beneficiary, invalid amount, no payment created.
+Business decline: account/card restriction, insufficient available funds, failed auth, limit/risk decision; do not automatically retry as transport error.
+Transport timeout: unknown whether remote accepted/processed; query before retry.
+Partial commit: payer debit succeeded but payee credit/status response failed; rail rules determine reversal/credit recovery.
+Duplicate submission: same business payment submitted twice because client retries with a new key; compare stable order/payment intent and network refs.
+Callback delivery failure: event could not reach merchant; provider may retry. Deduplicate event ID and independently query final status.
+Settlement mismatch: transaction looks successful but settlement file, account credit, fee or payout differs; create exception item and reconcile.
+Reversal/refund delay: initiate rail-specific claim and track compensating transaction.
+
+REGULATORY TAT EXAMPLES (RBI CIRCULAR OF 20 SEP 2019; CHECK FOR LATER UPDATES)
+UPI fund transfer: account debited but beneficiary not credited -> auto-reversal by T+1 day; ₹100/day compensation for delay beyond applicable timeline.
+UPI merchant payment: payer debit but merchant confirmation not received -> auto-reversal within T+5 days; ₹100/day beyond the applicable timeline.
+IMPS: remitter debited but beneficiary not credited -> auto-reversal by T+1 day; ₹100/day beyond applicable timeline.
+T is transaction date. These are failure-specific rules, not a blanket refund promise. Card-present, card-not-present, ATM, BBPS and other cases have separate entries. The RBI circular is from 2019 and itself may be updated; check official source before advising a live case.
+RBI official circular PDF: https://www.rbi.org.in/commonman/Upload/English/Notification/PDFs/CIRCULAR677EC931A7A65E4D99AA957D8E85BC0A2A.PDF
+
+CUSTOMER AND OPERATIONS RECOVERY
+Ask for rail, date/time, amount, app/bank, transaction reference, displayed state, whether account shows posted debit or pending hold, and merchant/order reference. Do not request full account/card details or authentication secrets. Customer reports first to originating bank/app/provider through official channel. Provider uses UTR/RRN/payment ID to trace; system operations reconcile switch/bank records; institution posts a reversal or credit if required. If unresolved, use the applicable regulated-entity grievance route and RBI CMS when eligible. For suspected unauthorized fraud, contact bank immediately through official channels and report through national cybercrime routes.
+
+EXAMPLE
+Merchant creates order O-55 for ₹799 and sends idempotency key K-55. PSP accepts but response times out. Merchant marks PENDING, does not create a new key, and queries K-55. Callback later reports success with network reference R-1. Merchant marks payment succeeded once, fulfills one order, and ties R-1 to later settlement. If an identical callback repeats, the event ID/transition check prevents a second fulfillment or ledger posting.
+
+RELATED SYSTEM CONCEPTS
+At-least-once webhook delivery + idempotent consumer -> safe duplicate processing. Eventual consistency -> two system views converge after delayed event propagation. Suspense account -> accounting hold for unallocated cash, not a replacement for finding the underlying cause. Reconciliation -> independent proof of completeness and correctness, not just status refresh.

@@ -1,0 +1,34 @@
+DOCUMENT_ID: IN-FINTECH-16
+TITLE: FinTech Data Models, Risk Analytics, Reconciliation Metrics, and Observability
+DOMAIN: FinTech data engineering
+SUBDOMAIN: transaction events, data quality, fraud/credit signals, monitoring
+COUNTRY: India
+APPLICABILITY: Engineering methods are illustrative; regulated model governance depends on entity and use
+LAST_VERIFIED: 2026-10-09; concepts stable; cite current regulator/model requirements before legal conclusions
+SOURCE_URLS: https://www.rbi.org.in/Scripts/BS_ViewMasterDirections.aspx | https://fiuindia.gov.in/
+KEY_TERMS: transaction event, data lineage, precision, recall, false positive, PD, LGD, EAD, drift, reconciliation break, trace, SLO
+RELATED_DOCUMENTS: 04_payment_states_and_failure_recovery.txt, 05_settlement_reconciliation.txt, 06_fintech_api_architecture.txt, 08_digital_lending.txt, 12_regtech_kyc_aml.txt, 13_fraud_security_privacy.txt
+---
+
+CANONICAL FINTECH EVENT
+An event should identify entity/tenant, event type, transaction/customer pseudonymous IDs, amount as integer paise plus currency code, event time, source system, effective/value date where applicable, status/code, correlation/reference, schema version, consent/purpose context and integrity/provenance fields. The same transaction can produce `payment_initiated`, `authorization_approved`, `bank_debit_posted`, `switch_credit_confirmed`, `settlement_completed`, `merchant_payout_sent` and `order_fulfilled`; these are not duplicate synonyms but separate facts.
+
+DATA QUALITY AND NORMALIZATION
+Validate identifiers, currency precision, sign, timezone, business date, enum mapping, duplicates, missing sequence, late events, source clock skew, encoding and file control totals. Preserve raw source and normalized form. Do not overwrite a source status silently. Data lineage records where a derived field came from, transformations/model version, and who/what consumed it. Tokenize identifiers and restrict joining across purposes.
+
+RISK MODEL TERMINOLOGY (FINTECH USE)
+Precision: proportion of flagged events actually positive under a defined label. Recall: proportion of positive cases detected. False positive: benign event flagged; false negative: harmful event missed. Base rate matters: rare fraud can generate many false alerts even with good accuracy. Monitor thresholds, customer harm, latency, override rates, drift, outcomes and segment performance.
+Credit-risk measures: PD (probability of default), LGD (loss given default), EAD (exposure at default); a simplified expected loss estimate is PD × LGD × EAD for a defined horizon/portfolio and assumptions. This is a model concept, not by itself an RBI provision calculation. Regulatory provisioning depends on current directions and asset category.
+Fraud score is risk evidence, not proof or a customer-facing legal conclusion. Explainability and appeal path matter for adverse outcomes.
+
+PAYMENT OPERATIONS DASHBOARD
+Track request-to-final latency; success/decline/pending rate by rail, participant and version; unknown transaction age; duplicate idempotency hits; callback lag/retry; reversal/refund ageing; clearing-to-payout variance; unmatched count/value; return reason distribution; file/control-total errors; suspense ageing; incident time and customer complaint rate. Slice only by approved purpose and minimum fields.
+
+MONITORING AND ALERT QUALITY
+Define service-level objective (SLO) for API availability/latency, not payment success alone. Alert on sustained deviation, not every transient decline. For example, 99.9% API uptime does not mean 99.9% of transfer requests settle; rail/bank dependencies and business declines must be separated. Trace identifiers should link channel, API, rail, ledger and settlement data without logging secrets. Keep runbook, escalation owner and evidence pointers.
+
+PRIVACY AND MODEL GOVERNANCE
+Feature registry/versioning, consent/source documentation, purpose limitation, retention, access approvals, bias/explainability review, change control, backtesting and independent validation should fit risk and applicable law. Do not infer a legal duty solely from a generic model-governance practice; regulator scope differs. Never use customer documents to train a model without a valid legal basis/consent and policy.
+
+EXAMPLE: PAYMENT DUPLICATE METRIC
+If client retries create 40 duplicate submissions per 10,000 operations, measure duplicates detected before external send and duplicates resolved after send separately. A high idempotency-hit count can indicate a flaky client, not necessarily duplicate debits. Verify against provider references and bank ledger before calling it customer loss.

@@ -1,0 +1,46 @@
+DOCUMENT_ID: IN-FINTECH-05
+TITLE: Clearing, Settlement, Merchant Payout, and Payment Reconciliation
+DOMAIN: Payment operations
+SUBDOMAIN: clearing, net/gross settlement, ledger matching, suspense
+COUNTRY: India
+APPLICABILITY: Conceptual; each rail and contract sets specific cycle and file formats
+LAST_VERIFIED: 2026-10-09; rail mechanics linked to RBI/NPCI references
+SOURCE_URLS: https://www.npci.org.in/transaction-settlement-lifecycle | https://www.rbi.org.in/scripts/FS_FAQs.aspx?Id=65 | https://www.rbi.org.in/Scripts/FAQView.aspx?Id=60
+KEY_TERMS: clearing, settlement, net settlement, gross settlement, settlement cycle, payout, reconciliation, suspense, control total, break
+RELATED_DOCUMENTS: 02_payment_rails.txt, 03_merchant_and_card_processing.txt, 04_payment_states_and_failure_recovery.txt, 07_ledger_and_accounting_entries.txt
+---
+
+DISTINGUISH THE TERMS
+Authorization: an issuer/account participant permits or rejects an instruction at that time; may reserve funds.
+Clearing: participants exchange/validate transaction details and calculate obligations to be settled. Card clearing usually follows capture. Other rails have rail-specific clearing messages/processes.
+Settlement: discharge of interparticipant financial obligations. RTGS is gross and settles individual instructions in RBI books. Many retail systems settle net obligations in scheduled cycles. “Net” means positions are offset for a cycle; it does not mean each customer receives only a net ledger entry.
+Posting: debit/credit entry in a customer's or institution's account ledger.
+Payout: acquirer/PA transfers amounts due to merchant under contract; this may follow interparticipant settlement.
+Reconciliation: independently compares records from two or more systems and identifies unmatched, duplicate, missing or amount-different items.
+
+END-TO-END RECORDS
+Customer payment request -> switch/acquirer/issuer event -> bank customer-ledger debit/credit -> scheme clearing or settlement obligation -> participant settlement account entry -> PA/acquirer merchant payable -> merchant bank payout -> merchant accounting and order record. Each leg should have its own reference and source-of-truth. A “success” event from one layer is not evidence that every later leg has completed.
+
+NET SETTLEMENT EXAMPLE (ILLUSTRATIVE ONLY)
+During a hypothetical cycle, Bank A owes Bank B ₹1,20,000 from accepted payments and Bank B owes Bank A ₹95,000. A net settlement mechanism may calculate ₹25,000 payable by A to B for that position, subject to actual scheme rules, multilateral positions, fees, collateral and settlement-finality provisions. RTGS instead settles each qualifying transfer gross; do not describe RTGS with this netting example.
+
+MERCHANT PAYOUT CALCULATION
+Daily successful captures ₹82,400; refunds ₹3,000; fee ₹1,250; reserve withheld under contract ₹2,000; previous dispute adjustment ₹700 -> illustrative payout ₹75,450. Accounting should preserve gross sales, refunds, fees, reserve and disputes separately rather than recording only net payout as sales. Actual fee taxes and permitted deductions depend on agreement and law.
+
+RECONCILIATION PROCESS
+1. Ingest provider transaction report, scheme settlement file, bank statement/API, internal payment table, merchant order/refund table.
+2. Normalize identifiers and time zones while retaining raw source. Convert money to integer minor units/decimal currency; never binary float.
+3. Match strongest keys first: participant reference + amount + currency + value date; then controlled fallback combinations such as order ID, masked account, event time and merchant ID.
+4. Compare counts and control totals for each file/batch: item count, debit total, credit total, fee total, reject/return total, opening/closing position.
+5. Classify breaks: missing internal item, missing external item, amount mismatch, duplicate, timing/value-date difference, fee/charge difference, unresolved status, invalid account, partial file.
+6. Assign owner and SLA; investigate original evidence; post correction only through approved compensating entry; retain case, evidence and reviewer.
+7. Re-run reconciliation and confirm the exception is cleared; do not delete the original break/audit trail.
+
+SUSPENSE AND EXCEPTION HANDLING
+Suspense is a temporary accounting classification when a real amount is known but its final destination/counterparty is unresolved. It needs age buckets, owner, supporting reference, permitted posting rule and escalation. It is not a place to hide unexplained differences or force a batch to balance. An unresolved customer-credit exception may require institution-led tracing and customer communication under rail/regulatory rules.
+
+OPERATIONAL CONTROL EXAMPLE
+A file says 10,000 transactions, debit ₹5,010,000, credit ₹4,990,000 and returns ₹20,000. Count 10,000 and debit=credit+returns hold only if file specification defines those totals that way. If one bank batch is missing, totals may mismatch. Reconcile expected file ID, sequence number, control sum, delivery checksum, row-level status and settlement confirmation before retrying the whole file; a whole-file retry can duplicate valid rows.
+
+INCREMENTAL INDEXING NOTE FOR FINTECH APP
+The current application builds a new in-memory vector store from source files when initializing; it does not maintain a persistent incremental index. Rebuilding from a source tree is idempotent because the index is fresh each time, but appending to a persistent index without stable IDs would duplicate chunks. Stable document IDs, relative source paths and per-document chunk identifiers below make a future persistent index safer.

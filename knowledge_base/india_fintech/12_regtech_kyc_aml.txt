@@ -1,0 +1,46 @@
+DOCUMENT_ID: IN-FINTECH-12
+TITLE: Indian FinTech RegTech, KYC, AML/CFT, Screening, and Reporting Controls
+DOMAIN: RegTech and compliance systems
+SUBDOMAIN: KYC, CDD, monitoring, sanctions, reporting, evidence
+COUNTRY: India
+APPLICABILITY: RBI-regulated entities and other covered persons under their applicable statutes; scope varies
+LAST_VERIFIED: 2026-10-09; RBI KYC consolidated source updated 6 Nov 2024; verify later changes
+SOURCE_URLS: https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=11566 | https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12746 | https://fiuindia.gov.in/
+KEY_TERMS: KYC, CDD, EDD, AML, CFT, PMLA, beneficial owner, PEP, sanctions screening, STR, CTR, CKYCR, alert, case management
+RELATED_DOCUMENTS: 00_ecosystem_and_regulator_map.txt, 01_banking_core_and_apis.txt, 08_digital_lending.txt, 09_account_aggregator_and_embedded_finance.txt, 13_fraud_security_privacy.txt
+---
+
+CONTROL CATEGORIES THAT MUST NOT BE COLLAPSED
+Customer Due Diligence (CDD/KYC): identify and verify customer and beneficial owner where applicable; understand relationship purpose/risk; maintain records; perform ongoing due diligence under the entity's regulatory framework.
+Authentication: determine whether the person/device may perform a requested operation now (password, OTP, UPI PIN, biometric, cryptographic proof under a specific flow).
+Authorization: product/bank/network decision to approve or decline a particular transaction or service operation.
+Sanctions screening: compare relevant people/entities/payment details with applicable designated lists and legal restrictions.
+AML/CFT monitoring: risk-based review of activity and patterns for potential money-laundering/terrorist-financing indicators; reporting duties apply to covered persons and facts as prescribed by PMLA/rules.
+Fraud controls: detect deception, account takeover, stolen credentials, mule accounts or unauthorized payment behavior. AML and fraud overlap but are not identical.
+Privacy/consent: legal basis and permitted use for personal/financial data; not equivalent to AML authority.
+
+CDD WORKFLOW
+1. Establish who is the regulated entity and customer/product relationship; use risk-based customer acceptance policy.
+2. Collect required identity data using a permitted method; validate document/authenticity; identify beneficial owners for legal persons as applicable.
+3. Screen required lists and risk markers; resolve plausible matches through documented process. Do not automatically accuse or permanently block solely from a fuzzy-name match.
+4. Assign risk profile and apply onboarding limits/controls under current rule and entity policy.
+5. Maintain source, verification time, reviewer and evidence; use CKYCR where applicable. CKYCR record availability does not replace entity-specific CDD obligations.
+6. Refresh/monitor information and transactions on a risk-based basis; handle triggered review, missing data, periodic updates and customer notices under current applicable directions.
+
+TRANSACTION MONITORING PIPELINE
+Ingest transaction/account events -> normalize customer/entity/account identifiers -> enrich with expected customer activity and risk inputs -> run documented scenarios/rules/models -> create alert with reason/evidence -> triage false positive/needs info/escalate -> investigate linked activity -> make authorized decision -> file/report when required -> retain evidence and audit trail. Thresholds, rules, model features and reporting criteria are not universally public and should not be fabricated by the chatbot.
+
+CASE AND REPORTING DATA
+RegTech case should preserve customer/beneficial-owner identifiers, related accounts, transaction references, amounts/currencies, timestamps/value dates, counterparties, rule/model version, alert rationale, reviewer notes, source documents, decision and approvals. Access is restricted. STR/CTR and other reports follow current FIU-IND formats, covered-person definitions and prescribed deadlines; an alert is not itself a report, and filing is not proof of criminal conduct. Avoid disclosing confidential reporting to a subject where law prohibits tipping-off.
+
+EXAMPLE: TRANSACTION REVIEW
+A small business usually receives 20 predictable local credits. It suddenly receives many unrelated credits and quickly sends funds onward. A monitoring rule may create an alert. Analyst compares customer profile, payment references, counterparties, explanations, prior behavior and available records; system records rationale and escalation. Customer-facing status may simply say “under review.” The assistant cannot know whether a real bank ran this scenario or what decision it made.
+
+SCREENING ENGINEERING CONTROLS
+List version/effective date, transliteration, aliases, fuzzy threshold, country/name normalization, false-positive queue, dual approval for overrides, audit log and rerun procedure are important. Avoid hard-coding a single name similarity score as a legal determination. Screening takes place at required relationship/transaction points defined by applicable framework and entity policy.
+
+INDIAN SOURCES
+RBI KYC Master Direction, updated 6 Nov 2024: https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=11566
+RBI KYC amendment circular of 6 Nov 2024: https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12746
+FIU-IND official portal: https://fiuindia.gov.in/
+Legal foundation includes PMLA and PML Rules; use current Gazette/India Code and relevant RBI/other-regulator directions. These sources were checked for the documents listed; this collection does not claim complete clause-by-clause legal validation as of today. Check latest amendments before operating a control.

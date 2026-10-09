@@ -1,0 +1,49 @@
+DOCUMENT_ID: IN-FINTECH-01
+TITLE: Indian Bank Accounts, Core Banking, and FinTech Integration
+DOMAIN: Banking integration
+SUBDOMAIN: account lifecycle, CBS, bank APIs, balances, identifiers
+COUNTRY: India
+APPLICABILITY: General operating model; bank-specific products and APIs vary
+LAST_VERIFIED: 2026-10-09; legal references listed; account features must be checked with the bank
+SOURCE_URLS: https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=11566 | https://www.rbi.org.in/Scripts/FAQView.aspx?Id=60 | https://www.rbi.org.in/scripts/FS_FAQs.aspx?Id=65
+KEY_TERMS: CBS, core banking system, account ledger, subledger, IFSC, MICR, SWIFT BIC, available balance, ledger balance, lien, hold, KYC, CKYC, nostro, vostro
+RELATED_DOCUMENTS: 00_ecosystem_and_regulator_map.txt, 07_ledger_and_accounting_entries.txt, 09_account_aggregator_and_embedded_finance.txt, 12_regtech_kyc_aml.txt
+---
+
+WHAT A CORE BANKING SYSTEM DOES
+A core banking system (CBS) is a bank's account and product processing platform used across branches and digital channels. The term may describe a suite, not one database. Typical functions include customer/account records, deposit and loan products, transaction posting, interest and charges, limits, holds, statements, general-ledger interfaces, payments, and reporting. A mobile app, API gateway, fraud engine, payment switch and CBS can all participate in a transaction; they need not be one application.
+
+CUSTOMER AND ACCOUNT DATA
+A customer identity record is not the same as an account. Customer identifiers may link multiple savings, current, deposit, loan, or payment products. A bank may maintain a customer information file (CIF), unique customer ID, account number, product terms, mandates, nominees, risk/ KYC status, and servicing restrictions. External interfaces expose only a designed subset. Do not assume account number is a globally unique customer identity or that a channel has permission to expose all CBS fields.
+KYC (Know Your Customer) is customer due diligence under applicable law and directions; the bank identifies and verifies the customer, records purpose/risk information, and performs ongoing measures. CKYCR stores/retrieves centralized KYC records under its framework; it does not make every bank's ongoing obligations disappear. KYC is not the same as transaction authentication or payment authorization.
+
+BALANCE SEMANTICS
+Ledger/book balance is the balance reflected by posted entries at a ledger cut-off. Available balance is an operational amount the bank currently permits the customer to use after applicable holds, liens, uncleared items, limits, and product rules. A card authorization can create an available-credit hold before final posting. A lien or earmark reserves an amount for a specified purpose; it is not necessarily a debit. A pending payment may be represented in a channel, switch, or authorization store while the CBS entry is not final. Exact meaning and update latency depend on product and bank.
+Example: account ledger balance ₹10,000; a ₹1,200 UPI debit posts -> ledger ₹8,800. A separate ₹2,000 lien can make available funds ₹6,800 without changing ledger balance. Never infer a customer's actual balance from generic status text.
+
+IDENTIFIERS AND ROUTING
+IFSC (Indian Financial System Code) identifies a bank branch/payment destination in domestic account transfer instructions; banks may map it to current internal routing. MICR (Magnetic Ink Character Recognition) is a cheque-processing code printed in magnetic ink. SWIFT/BIC identifies institutions for international financial messaging; it is not an account number and does not itself transfer money. UPI ID/VPA routes a UPI address. UTR, RRN, network reference, bank transaction ID, and merchant order ID are different identifiers with different scopes. Preserve correlation among them rather than treating them as one universal reference.
+
+API INTEGRATION PATTERN
+1. FinTech obtains approved bank/API access, client identity and scopes, environment credentials, callback registration, and contractual/legal basis.
+2. Client authenticates to the API gateway using the approved mechanism. Production designs generally use TLS and service-specific authentication such as OAuth client credentials, signed requests, mutual TLS, or bank-issued keys; the actual bank contract decides.
+3. Gateway validates identity, scope, schema, rate limit, replay window, and request signature, then routes to an adapter or banking service.
+4. Adapter translates external contract into an internal command/query. CBS or a downstream system validates customer/account state and commits or rejects an operation.
+5. Response may be synchronous acknowledgement, business result, or accepted-for-processing. Later status may arrive by webhook, polling, statement feed, or settlement file.
+6. FinTech stores the bank reference and its own correlation ID; reconciliation compares its event record with bank-confirmed status and statement/ledger data.
+An HTTP 200 or accepted request means only what the API contract says; it does not necessarily mean a transfer settled or account posting is final.
+
+LEDGER AND BATCH INTEGRATION
+Banks may use service boundaries, message queues, host adapters, batch files, real-time APIs, or hybrid integrations. Nightly/day-end processing can include accruals, fee runs, interest, settlement files, reconciliation, regulatory reports and control totals. “End of day” is a bank/system business-date boundary, not always midnight local time. A file accepted by a bank does not prove every row was posted; row-level status, control totals and rejects must be reconciled.
+
+FAILURES AND RECOVERY
+Distinguish validation rejection (no command accepted), timeout with unknown outcome, accepted pending, posted debit, reversed entry, duplicate request, and downstream settlement exception. On timeout, query by idempotency key/reference before retrying a money-moving command. If the bank provides no idempotent API, maintain a client-side operation record and route uncertain cases to status enquiry/reconciliation rather than blind retry. Never “fix” a posted financial event by editing a row; post a compensating reversal with a linked original reference.
+
+SECURITY CONTROLS
+Use least privilege and separate read, payment-initiation, and admin scopes. Keep API secrets in a secret manager, rotate keys, avoid logging account identifiers and authentication factors, encrypt in transit and at rest, validate signed callbacks and timestamps, reject replays, and apply customer consent/purpose controls. Mask PAN/account data in observability. Redact logs before support export.
+
+REGULATORY SOURCES AND LIMITS
+RBI KYC Direction, updated 6 Nov 2024: https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=11566
+RBI NEFT FAQ: https://www.rbi.org.in/Scripts/FAQView.aspx?Id=60
+RBI RTGS FAQ: https://www.rbi.org.in/scripts/FS_FAQs.aspx?Id=65
+These references support KYC and named payment-rail behavior, not a universal technical specification for each bank's CBS or API. Private bank API schemas are contract-specific and are intentionally not invented here.

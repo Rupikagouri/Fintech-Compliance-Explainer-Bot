@@ -1,0 +1,59 @@
+DOCUMENT_ID: IN-FINTECH-03
+TITLE: Indian Merchant Acceptance, Cards, Wallets, Gateways, and Aggregators
+DOMAIN: Merchant payments
+SUBDOMAIN: acquiring, cards, PA/PG, tokenization, refunds
+COUNTRY: India
+APPLICABILITY: Online and in-person payment concepts; network and contract rules vary
+LAST_VERIFIED: 2026-10-09; see RBI/NPCI/network sources for current operational requirements
+SOURCE_URLS: https://www.rbi.org.in/Scripts/BS_ViewMasterDirections.aspx | https://www.npci.org.in/what-we-do/rupay/product-overview | https://developer.visa.com/pages/glossary
+KEY_TERMS: merchant, PA, PG, acquirer, issuer, authorization, capture, clearing, settlement, MDR, EMV, 3DS, tokenization, chargeback, PPI
+RELATED_DOCUMENTS: 02_payment_rails.txt, 04_payment_states_and_failure_recovery.txt, 05_settlement_reconciliation.txt, 07_ledger_and_accounting_entries.txt, 12_regtech_kyc_aml.txt
+---
+
+MERCHANT ACCEPTANCE ROLES
+Merchant: sells goods/services, creates order and fulfillment records.
+Acquiring bank/provider: connects merchant to one or more payment rails and receives/settles obligations as contracted.
+Payment Gateway (PG): typically provides technical capture, encryption/tokenization, routing and status interfaces. It may not receive or hold funds.
+Payment Aggregator (PA): under RBI's Indian payment-system framework, aggregates merchant acceptance and may receive/pool customer funds for onward settlement; authorization and escrow/settlement obligations depend on current RBI directions. Do not call every gateway a PA or assume the same funds flow.
+Issuer: customer's card/PPI issuing bank or institution. Card network routes messages and applies scheme rules. Processor/PSP is a broad technical or service role defined by contract and rail.
+
+MERCHANT ONBOARDING WORKFLOW
+1. Merchant submits legal entity, beneficial owner, bank settlement details, website/app, business model, products, expected volume and customer-support details to its PA/acquirer.
+2. Provider performs due diligence and risk/merchant category assessment under its regulated role, scheme rules, AML/CFT controls and current RBI directions.
+3. Contract sets fees, reserve/hold rights, payout timing, refund/dispute process, prohibited activities, chargeback evidence and data obligations.
+4. Integration credentials are issued per environment. Test/sandbox keys differ from production keys; secrets must not enter client-side code or logs.
+5. Merchant maps order identifiers to payment intent, authorization, capture, refund, payout and dispute references. A paid order must be reconciled to settlement, not inferred from browser redirect alone.
+
+CARD PURCHASE LIFECYCLE
+1. Checkout creates an order and payment attempt with a unique merchant order ID and idempotency key.
+2. Gateway/acquirer routes card authorization via the network to issuer. E-commerce may use tokenized card credentials and 3-D Secure / additional factor authentication under applicable rules. Authentication helps verify identity; it does not guarantee issuer approval.
+3. Issuer checks card/account status, available credit/funds, authentication, limits and risk; returns approve or decline plus network reference. Approval often creates a hold/reservation, not final merchant payment.
+4. Merchant captures an approved transaction at purchase or later. Partial capture/void behavior is contract/scheme dependent.
+5. Acquirer batches clearing records through network; issuer/acquirer obligations are settled through the network's settlement process.
+6. Acquirer/PA pays merchant based on contract, schedule, deductions, refunds, reserves and risk review. Merchant reconciles payout file to captured sales and bank credit.
+
+SYNCHRONOUS ACK, ASYNC CALLBACK, WEBHOOK, POLLING
+An API request may return `accepted` with a transaction ID before issuer result is known. A webhook can later report success/failure, but callbacks can be delayed, repeated or arrive out of order. Validate webhook signature and timestamp; deduplicate with provider event ID; fetch authoritative status when outcome is uncertain; reconcile later against settlement/statement data. A browser redirect is not an authoritative payment record. See 06 and 10.
+
+WALLETS AND PPIs
+A prepaid payment instrument (PPI) stores value or represents a prepaid claim usable under the issuer's product/rules. Wallets are software interfaces for PPIs and/or linked payment methods; “wallet” is not one regulatory type. Closed-system instruments usable only with issuer are treated differently from semi-closed/open PPIs under RBI directions. Full-KYC, small PPIs, interoperability, limits, refunds and cross-border functionality are subject to RBI PPI Directions as amended. Do not quote an old limit from a stale blog. A wallet ledger, issuer settlement account and merchant payout ledger are distinct records.
+RBI MD-PPIs consolidated as of 27 Dec 2024: https://www.rbi.org.in/Scripts/NotificationUser.aspx/NotificationUser.aspx?Id=12156
+
+PRICING AND MERCHANT STATEMENTS
+MDR (merchant discount rate) is a merchant-side fee concept, not a universal fee for every UPI/card/rail payment. Merchant net settlement may equal captured gross sales less refunds, chargebacks, fees, taxes, reserves, prior adjustments and other contractually permitted items. A sample payout: gross captured ₹50,000; refunds ₹2,000; fee/charges ₹600; reserve ₹1,000 -> illustrative net ₹46,400. Actual fee bases/tax treatment follow contract and applicable law.
+
+REFUND AND CHARGEBACK PATHS
+Refund: merchant initiates a credit linked to original payment; PA/acquirer/network routes it; issuer posts credit; merchant ledger and payout reconciliation record both gross sale and refund. It can take time to appear in card/account record.
+Chargeback/dispute: customer contacts issuer, issuer raises scheme case, acquirer/merchant submits evidence, network rules determine representment/decision and financial adjustment. It is not the same as a voluntary refund or immediate reversal. Preserve order, delivery, consent/auth, transaction and communication evidence with retention controls.
+
+SECURITY CONTROLS
+Use hosted fields/tokenization where appropriate; never store CVV after authorization or log full PAN/OTP/PIN. Scope payment-card data environment, apply least privilege, TLS, encryption, key rotation, fraud velocity rules, device/identity risk controls, secure webhook validation and PCI DSS where applicable to the service. Indian RBI card-data storage and tokenization rules must be checked in current official directions; do not infer that tokenization removes every compliance duty.
+
+FAILURE CASE: CUSTOMER DEBITED, MERCHANT SAYS FAILED
+Check whether there is an authorization hold, captured/posting transaction, completed rail transaction, or a timeout with unknown status. Match provider payment ID to merchant order and bank RRN/UTR. Query provider status before retrying; if the original completed, fulfill/reconcile or refund according to contract. If failed but funds are debited, follow rail-specific RBI TAT/dispute route from 04. Never assume the same deadlines for cards, UPI and bank transfer.
+
+OFFICIAL SOURCES
+RBI Master Directions index (current PA, PPI, cards and payment-system directions): https://www.rbi.org.in/Scripts/BS_ViewMasterDirections.aspx
+RBI PA cross-border circular (2023): https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12561
+NPCI transaction settlement lifecycle: https://www.npci.org.in/transaction-settlement-lifecycle
+Visa glossary for generic card message vocabulary: https://developer.visa.com/pages/glossary (scheme-neutral explanations still vary by network)

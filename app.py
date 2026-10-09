@@ -940,7 +940,8 @@ def _render_metrics(message_count: int) -> None:
     col1, col2, col3 = st.columns(3)
     from rag_pipeline import DATA_PATH
 
-    knowledge_file_count = len(list(DATA_PATH.glob("*.txt")))
+    kb_path = Path(__file__).resolve().parent / "knowledge_base" / "india_fintech"
+    knowledge_file_count = len(list(DATA_PATH.rglob("*.txt"))) + len(list(kb_path.rglob("*.txt")))
     col1.metric("Knowledge files", knowledge_file_count, help="FinTech workflow documents in the knowledge base")
     col2.metric("Questions asked", message_count, help="This session")
     col3.metric("LLM", "Gemini Flash", help="Google Gemini 1.5 Flash")
@@ -987,7 +988,7 @@ def main() -> None:
     # ── Chat window ──────────────────────────────────────────────────────
     st.markdown('<div class="chat-wrap">', unsafe_allow_html=True)
     st.markdown(
-        '<div class="chat-header">💬 Ask me about digital payments &amp; FinTech</div>',
+        '<div class="chat-header">💬 Ask me about Indian FinTech systems</div>',
         unsafe_allow_html=True,
     )
 
@@ -1020,11 +1021,11 @@ def main() -> None:
     )
 
     suggestions = [
-        "What happens after I click Pay?",
-        "What is a compliance check?",
-        "Why hasn't my payment settled?",
-        "What does KYC mean?",
-        "What is UPI?",
+        "Why is a UPI payment pending after debit?",
+        "How does merchant settlement reconciliation work?",
+        "What is an Account Aggregator consent artefact?",
+        "What do LOS and LMS do in digital lending?",
+        "How do fintech APIs prevent duplicate payments?",
     ]
     sug_cols = st.columns(len(suggestions))
     for col, sug in zip(sug_cols, suggestions):
@@ -1040,7 +1041,7 @@ def main() -> None:
     with col_input:
         user_input = st.text_input(
             "Your question",
-            placeholder="e.g. What is settlement in digital payments?",
+            placeholder="e.g. How does a fintech payment move from authorization to settlement?",
             key="user_input",
             label_visibility="collapsed",
         )

@@ -1,0 +1,31 @@
+DOCUMENT_ID: IN-FINTECH-COVERAGE
+TITLE: Indian FinTech Coverage Matrix
+DOMAIN: Collection index
+COUNTRY: India
+LAST_VERIFIED: 2026-10-09
+---
+
+TOPIC | PRIMARY DOCUMENTS | COMPLEMENTARY LINKS
+Ecosystem, entity roles, regulator boundaries | 00 | 12, 14
+Banking, core systems, bank APIs, identifiers | 01 | 06, 07, 09
+UPI, IMPS, NEFT, RTGS, AePS, NACH, BBPS, NETC | 02 | 04, 05, 07, 15
+Cards, wallets, gateway, aggregator, merchant | 03 | 02, 04, 05, 13
+Authorization, clearing, settlement, status, retries | 02, 04, 05 | 03, 06, 07
+Failure, timeout, duplicate, reversal, refund, dispute | 04 | 02, 03, 05, 13
+Reconciliation, settlement files, payout | 05 | 02, 03, 07, 16
+Fintech APIs, callbacks, events, retries, reliability | 06 | 01, 04, 07, 13, 16
+Ledger, double-entry, financial transaction accounting | 07 | 01, 03, 05, 08
+Digital lending, LOS/LMS, KFS, disbursal, servicing | 08 | 01, 06, 07, 09, 12, 13
+Account Aggregator, consent, embedded finance | 09 | 01, 06, 08, 12, 13
+InsurTech, policy, premium, claims | 10 | 06, 12, 13
+WealthTech system/product servicing workflows | 11 | 01, 06, 12, 13
+RegTech, KYC, CKYC, AML/CFT, monitoring | 12 | 00, 01, 08, 09, 13
+Fraud, cybersecurity, privacy, incident response | 13 | 03, 04, 06, 09, 12, 16
+Cross-border remittance, FX operations, PA-CB | 14 | 01, 03, 05, 12
+Financial inclusion, DBT, Aadhaar-enabled payment | 15 | 02, 09, 12, 13
+Fintech analytics, data, risk signals, observability | 16 | 04, 05, 06, 08, 12, 13
+Terms/acronyms/synonyms | GLOSSARY | all files
+Regulatory source quality/date | SOURCE_REGISTER | relevant domain files
+
+EXCLUSIONS
+General budgeting/personal finance, standalone investment or stock-market tutorials, generic corporate finance and unrelated AI/ML education are outside the chatbot's intended knowledge scope. WealthTech is included only for Indian fintech product operations, system flow, controls, and applicable perimeter.

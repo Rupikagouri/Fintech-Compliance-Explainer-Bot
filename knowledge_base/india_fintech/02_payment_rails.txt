@@ -1,0 +1,55 @@
+DOCUMENT_ID: IN-FINTECH-02
+TITLE: Indian Payment Rails: UPI, IMPS, NEFT, RTGS, AePS, NACH, BBPS, NETC
+DOMAIN: Payments infrastructure
+SUBDOMAIN: rail lifecycles, messages, money movement, exceptions
+COUNTRY: India
+APPLICABILITY: Simplified public operating model; participating-bank implementation varies
+LAST_VERIFIED: 2026-10-09; see individual regulator/scheme pages for live rules and limits
+SOURCE_URLS: https://www.npci.org.in/transaction-settlement-lifecycle | https://www.npci.org.in/product/imps | https://www.npci.org.in/product/netc/about-netc | https://www.rbi.org.in/Scripts/FAQView.aspx?Id=60 | https://www.rbi.org.in/scripts/FS_FAQs.aspx?Id=65
+KEY_TERMS: UPI, IMPS, NEFT, RTGS, AePS, NACH, BBPS, NETC, switch, mandate, VPA, UTR, RRN, clearing, settlement
+RELATED_DOCUMENTS: 03_merchant_and_card_processing.txt, 04_payment_states_and_failure_recovery.txt, 05_settlement_reconciliation.txt, 07_ledger_and_accounting_entries.txt, SOURCE_REGISTER.txt
+---
+
+COMMON MODEL
+A payment instruction and a movement of funds are related but different. The customer channel constructs an instruction; the sending institution authenticates/validates; a rail routes and records messages; participant institutions apply debit/credit rules; clearing and settlement discharge inter-participant obligations; each institution posts its customer ledger; status acknowledgements propagate back. Some steps are near-real-time, others are batched. A timeout means the app lacks a final response, not that the payment definitely failed. Names, message formats, retry behavior and internal bank stages vary. The sequences below are simplified, not proprietary specifications.
+
+UPI — INSTANT ACCOUNT-TO-ACCOUNT PUSH/COLLECT
+Purpose: mobile-first person-to-person and merchant payments using a UPI ID/VPA, QR, account details, or permitted linked credentials. Participants include payer app (bank app or TPAP through a PSP bank), payer bank, NPCI UPI switch, payee bank, and potentially merchant acquirer/PA for merchant acceptance.
+Prerequisites: eligible bank account, supported app/device binding, mobile registration as required by the bank, UPI registration, beneficiary/merchant address, and payer authorization. UPI PIN authorizes a debit; never disclose it to receive money.
+Simplified path: payer selects payee/QR and amount -> app forms transaction with payer/payee identifiers and reference -> customer approves using bank-authorized factor (commonly UPI PIN for debit) -> PSP routes request to NPCI -> payer bank validates account/auth/risk/balance and debits or declines -> switch routes to payee bank -> payee bank attempts credit -> status responses return across participants -> apps/merchant reconcile final state. Exact ordering and internal posting controls vary; the network message itself is not a customer ledger.
+Money: payer account debit and payee account credit occur on bank ledgers; NPCI scheme settlement between participants is distinct from those entries and can follow scheme-defined cycles. A merchant acquiring/payout contract can add another settlement leg.
+Exceptions: timeout, payer debit but no credit, duplicate callback, wrong VPA, bank unavailable, risk decline, merchant order mismatch. Record UTR/reference; query original status; do not blindly create a second payment. See 04 and 05.
+Example: Asha buys ₹1,000 of groceries by dynamic QR. She checks the merchant name and amount, approves in her app; payer bank debits ₹1,000, payee bank credits the merchant-linked account, merchant order records payment. If the response times out after debit, the state is “unknown/pending” until rail/bank status resolves; the shop's order page and bank statement can temporarily differ.
+
+IMPS — IMMEDIATE INTERBANK TRANSFER
+NPCI describes IMPS as available round-the-clock and publishes a ₹5 lakh per-transaction ceiling for ordinary channels except SMS/IVR; bank/channel limits can be lower. Customer initiates through supported mobile/internet/ATM channel using account+IFSC or supported mobile-linked addressing. Sending bank authenticates and validates -> IMPS switch routes -> receiving bank posts or rejects -> response returns. Money movement, participant settlement, and customer status should be reconciled separately. Failed debited-but-not-credited cases have a rail-specific RBI turnaround framework; do not reuse UPI merchant deadlines.
+Official: https://www.npci.org.in/product/imps
+
+NEFT — RBI-OPERATED BATCH RETAIL TRANSFER
+Customer gives beneficiary name, account number, IFSC, amount. Remitting bank validates/instructs -> RBI NEFT processes in half-hourly batches and is available 24x7x365 per FAQ -> beneficiary bank receives settled instruction and credits or returns -> remitting customer receives confirmation/reference. RBI's FAQ says credit or return is expected within two hours of batch settlement. NEFT has no RBI-set floor/ceiling, but banks may set channel limits. Batch timing is not “one hour banking-hours only.”
+Example: ₹18,500 rent transfer is accepted just after a batch cutoff. The app may show submitted while the instruction waits for a subsequent batch. A UTR helps bank support locate it.
+Official: https://www.rbi.org.in/Scripts/FAQView.aspx?Id=60
+
+RTGS — REAL-TIME GROSS INTERBANK SETTLEMENT
+RTGS settles qualifying transfers individually in central-bank money, transaction by transaction without netting. The RBI FAQ states 24x7x365 availability, minimum ₹2 lakh, no RBI upper amount cap, and beneficiary credit within 30 minutes after the beneficiary bank receives the transfer message. Bank channel limits may differ. Remitter submits beneficiary details -> remitting bank validates -> RTGS processes/settles -> beneficiary bank credits or returns -> positive confirmation goes to remitting bank. RTGS finality at interbank settlement does not make every user-interface update instantaneous.
+Example: a business sends ₹4.2 lakh to a supplier. It saves the 22-character UTR, confirms debit, and asks the remitting bank to trace if the supplier's bank does not show credit.
+Official: https://www.rbi.org.in/scripts/FS_FAQs.aspx?Id=65
+
+AePS — AADHAAR ENABLED PAYMENT SYSTEM
+AePS enables specified interoperable, Aadhaar-authenticated banking services through business correspondents/micro-ATMs. Roles can include customer, BC agent, acquiring bank, issuer/account-holding bank, NPCI AePS switch, and Aadhaar authentication infrastructure. A customer requests supported transaction; agent device captures required transaction details and approved authentication input; acquiring participant routes request; issuer bank validates account/service and response; cash is handed to customer only after authorized success; agent settlement and cash/reconciliation controls follow participant rules. Biometric authentication is not the same as account debit consent for every possible purpose; supported transactions and consent are bounded by the applicable system flow. Protect biometrics and receipts; failed cash-dispense versus debit cases need separate complaint handling.
+Official references: https://www.npci.org.in/product/aeps and UIDAI https://uidai.gov.in/
+
+NACH — BULK AND RECURRING CLEARING
+National Automated Clearing House supports bulk credit and debit flows and mandate-based recurring collections. Sponsor/utility institution submits a validated file or transaction set -> NPCI clearing processes it under the relevant cycle -> destination banks post accepted items or return rejects -> sponsor/beneficiary reconciles acknowledgements and settlement. Common fintech uses include salary/benefit credits and loan EMI mandates. A mandate is authority for a defined recurring debit, not evidence every debit succeeded. File control totals, item counts, mandate status, return reason and settlement totals should be reconciled.
+Official: https://www.npci.org.in/what-we-do/nach/product-overview
+
+BBPS — INTEROPERABLE BILL PAYMENT
+Bharat Bill Payment System is an interoperable bill-payment ecosystem. A customer-facing operating unit/channel accepts biller category, consumer/account reference and amount; bill payment operating units, BBPCU and participating agents/billers route and settle under BBPS rules. A valid bill payment confirmation/reference should be persisted separately from the later biller ledger update. Errors include invalid consumer number, stale bill, timeout, duplicate presentment, delayed confirmation and refund/reversal. Use the BBPS transaction reference and channel complaint process; do not assume every biller has identical posting latency.
+Official RBI BBPS Directions landing: https://www.rbi.org.in/Scripts/BS_ViewMasterDirections.aspx ; NPCI BBPS: https://www.npci.org.in/what-we-do/bharat-billpay
+
+NETC FASTag — TOLL PAYMENTS
+NETC is NPCI's interoperable electronic toll collection system. A vehicle's RFID FASTag is read at a toll plaza, transaction data is routed across acquirer/issuer/system participants, the linked wallet/PPI or account funding arrangement is debited, plaza receives transaction status, and clearing/settlement and exceptions follow NETC rules. Vehicle/Tag status, insufficient balance, blacklisting, duplicate reads and toll-lane communication failures can change the outcome. Preserve plaza, timestamp, tag and transaction references and use issuer support. NPCI describes a common interoperable process and clearing-house services; internal vendor protocols vary.
+Official: https://www.npci.org.in/product/netc/about-netc
+
+SOURCE/STATUS CAVEAT
+NPCI's published transaction settlement lifecycle has rail-specific materials: https://www.npci.org.in/transaction-settlement-lifecycle. This document intentionally gives conceptual public flows, not network message schemas. For current limits, eligibility, dispute route, settlement cycles or technical certification, consult the latest NPCI operating circular and the relevant bank/participant agreement.

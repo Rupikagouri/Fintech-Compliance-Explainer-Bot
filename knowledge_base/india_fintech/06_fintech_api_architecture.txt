@@ -1,0 +1,45 @@
+DOCUMENT_ID: IN-FINTECH-06
+TITLE: FinTech Software Architecture, APIs, Events, and Transaction Reliability
+DOMAIN: FinTech software engineering
+SUBDOMAIN: API integration, state machines, distributed processing
+COUNTRY: India
+APPLICABILITY: Engineering patterns are illustrative unless explicitly tied to a regulation or scheme rule
+LAST_VERIFIED: 2026-10-09; architecture patterns are stable concepts, not regulator-mandated designs
+SOURCE_URLS: https://www.rbi.org.in/Scripts/BS_ViewMasterDirections.aspx | https://www.npci.org.in/transaction-settlement-lifecycle
+KEY_TERMS: REST, API, OAuth, webhook, callback, idempotency, event sourcing, queue, retry, correlation ID, state machine, dead-letter queue
+RELATED_DOCUMENTS: 01_banking_core_and_apis.txt, 04_payment_states_and_failure_recovery.txt, 05_settlement_reconciliation.txt, 07_ledger_and_accounting_entries.txt, 13_fraud_security_privacy.txt
+---
+
+REFERENCE ARCHITECTURE
+Customer channel -> API gateway -> identity/consent and product service -> orchestration/state store -> rail/bank adapter -> bank/network -> event consumer -> ledger/reconciliation -> notifications and operations console. Risk/fraud checks, limits, compliance decisioning, audit and observability cross these components. Real products may combine services or use vendor systems; this is an explanatory pattern, not a required Indian regulatory architecture.
+
+API CONTRACT DESIGN
+An API request should have an authenticated principal, scope, schema version, request/correlation ID, idempotency key for a money-moving command, amount/currency, explicit beneficiary token/reference, creation time and consent/purpose where applicable. Response distinguishes validation error, accepted command, terminal business outcome, and pending status. A 202/accepted response means processing was accepted; it does not prove bank settlement. Errors should have stable machine code plus safe user message. Never expose provider stack traces, credentials or full financial identifiers.
+
+AUTHENTICATION AND SIGNING
+API key identifies a client but is not necessarily end-user authorization. OAuth token contains a client/user context and scopes; signed webhooks help recipient authenticate event integrity. TLS protects transport, but does not replace payload validation or access policy. Common choices include OAuth 2 client credentials, mTLS, HMAC signatures, asymmetric signatures and short-lived bearer tokens according to bank/provider contracts. Protect secrets in server-side stores, rotate, scope by environment, revoke promptly and do not ship production credentials in mobile apps, HTML, Git, screenshots or logs.
+
+IDEMPOTENCY AND DISTRIBUTED FAILURE
+Network timeout after a POST is ambiguous: request might not have reached provider, might have been committed, or response might be lost. Use a key unique to one intended business operation and stable across retry. Persist key -> command/result. If same key and same payload arrives, return prior outcome; same key with a materially different payload is a conflict. Provider idempotency retention/window is contract-specific. Local idempotency prevents duplicate local command processing; only provider/rail controls can prevent duplicate external execution reliably.
+
+Simplified pattern:
+receive command -> validate auth/schema -> atomically save intent + outbox event -> worker sends to provider with idempotency key -> save provider reference/response -> consume webhook at least once -> dedupe event -> validate state transition -> post ledger event once -> reconcile settlement later.
+
+STATE TRANSITIONS AND EVENT ORDER
+Keep state machine transitions explicit: CREATED -> SUBMITTED -> PENDING -> SUCCEEDED/FAILED/DECLINED. A refund/dispute is a linked object; do not overwrite original payment. Reject transitions such as FAILED -> SUCCEEDED unless provider/rail supplies an authoritative correction and the model supports reopened/adjusted state. Events can arrive out of order: sequence/version, provider event time and current-state query help resolve. Retain raw event safely for audit. Store UTC timestamps plus provider value date/time zone as required.
+
+QUEUES AND RETRIES
+Message queues decouple API response from slow bank/network operations. At-least-once delivery is common; handlers must be idempotent. Retry transient 429/5xx/timeouts with bounded exponential backoff and jitter, respect Retry-After, and do not retry business declines as though they were network faults. Poison events go to dead-letter queue with alert/replay procedure and audit. Exactly-once delivery across independent bank, network and merchant systems is generally not achievable as a simple transport promise; design for deduplication and reconciliation.
+
+DATABASE AND MONEY REPRESENTATION
+ACID transaction can atomically commit local payment intent and an outbox event. It cannot atomically commit a remote bank debit unless a jointly coordinated protocol exists. Row locks/unique constraints and optimistic version checks protect concurrent updates. Event sourcing can preserve immutable event history but still requires projections, repair and privacy retention controls. Store INR as integer paise or exact decimal with explicit scale, not binary float. For ₹1,250.75 store 125075 paise or Decimal(1250.75), not a float approximation.
+
+SECURE WEBHOOK EXAMPLE (PSEUDOCODE)
+read raw request bytes -> validate provider signature using active/rotating secret -> validate timestamp/replay window -> parse and schema-check -> insert event_id with unique constraint -> if duplicate return success without reapplying -> lock payment row -> validate allowed transition -> append immutable event -> update projection and ledger through transactional outbox -> enqueue reconciliation/notification -> respond quickly.
+Do not trust a webhook merely because it came to an obscure URL; do not expose endpoint secrets in browser code.
+
+OBSERVABILITY AND RECOVERY
+Structured logs use correlation IDs and masked account/payment references. Metrics include submission/accept/success/unknown rates, callback lag, duplicate event count, queue age, settlement break count and aged suspense. Distributed traces follow request across services but must not include secrets or full PII. Alerts need named owner/runbook. Backups, disaster recovery, access review, key rotation, incident containment and tested restore procedures matter because a payment product has both availability and integrity requirements.
+
+TESTING PATTERNS
+Use deterministic sandbox mocks; schema/contract tests; idempotency/replay tests; callback signature tests; duplicate and reordered event tests; timeout-after-commit test; bank reject, partial file, duplicate payout and mismatch scenarios; reconciliation balance controls; load and rate-limit tests; access-control/security tests; and disaster-recovery exercises. A happy-path API 200 test alone does not establish correct money state.

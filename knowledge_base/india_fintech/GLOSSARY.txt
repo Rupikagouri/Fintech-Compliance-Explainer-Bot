@@ -1,0 +1,68 @@
+DOCUMENT_ID: IN-FINTECH-GLOSSARY
+TITLE: Indian FinTech Glossary, Acronyms, Synonyms, and Cross-References
+DOMAIN: Terminology index
+COUNTRY: India
+LAST_VERIFIED: 2026-10-09; legal meanings depend on current instrument and context
+---
+
+Terms are explained for retrieval and education. A short definition does not replace the detailed workflow in its cross-reference. “Synonyms” below are common query phrasings and may not be legally interchangeable.
+
+AA — Account Aggregator. RBI-regulated NBFC framework participant that facilitates consent-based financial information sharing; it is not the user's bank or a lender. See 09.
+ACH / NACH — Automated Clearing House / National Automated Clearing House. Bulk and recurring interbank payment infrastructure used for mandates, collections, and credits. See 02.
+Acquirer — Bank or authorized acquiring participant that connects a merchant to a payment rail/network and handles acceptance-side processing. “Merchant bank.” See 03.
+AePS — Aadhaar Enabled Payment System. NPCI payment service using an Aadhaar-linked account and approved authentication flow through a BC/micro-ATM context; identity authentication is not a general payment authorization. See 02, 15.
+AML/CFT — Anti-Money Laundering / Countering the Financing of Terrorism. Risk controls, monitoring, investigation, and reporting duties for covered entities. See 12.
+API — Application Programming Interface. Contract for systems to exchange requests/responses; credentials, scopes, signatures, schemas, limits, and errors are integration-specific. See 01, 06.
+Authorization — A decision/message permitting or declining a requested operation under a participant's controls. It does not necessarily mean settlement or final posting. See 03, 04.
+Available balance — Spendable amount after relevant holds/limits; it may differ from ledger balance. See 01.
+BBPS — Bharat Bill Payment System. Interoperable bill payment ecosystem with customer-facing operating units and biller-side participants. See 02.
+Beneficial owner — Natural person(s) ultimately owning/controlling a customer/entity under applicable rules; definitions and thresholds depend on the governing instrument. See 12.
+Callback/webhook — HTTP notification sent by a service about an event; delivery may be delayed/retried and requires authentication and idempotent handling. See 06.
+CBS — Core Banking System. Bank platform maintaining account/product records and processing account transactions; internal architecture differs by bank. See 01.
+CDD/EDD — Customer Due Diligence / Enhanced Due Diligence. Risk-based identity and relationship checks, with enhanced steps for specified higher-risk cases. See 12.
+Chargeback — Card-scheme dispute mechanism that may reverse/reallocate a transaction subject to rules, reason codes, evidence, and deadlines. Not a guaranteed refund. See 03, 04.
+Clearing — Exchange/validation/calculation of obligations among participants before settlement; specific rail mechanics differ. See 02, 05.
+CKYC / CKYCR — Central KYC / Central KYC Records Registry. Centralized KYC record ecosystem; record retrieval does not remove all institution-level due diligence. See 12.
+Consent artifact — Structured record of a user's data-sharing permission, including purpose, data scope, recipient, and validity elements under a framework. See 09.
+Correlation ID — Identifier linking logs/events across services for one business flow; not necessarily the rail transaction reference. See 06.
+CR/DR — Credit/Debit. Accounting entry direction is determined by account type; customer-visible debit/credit language is not by itself a complete double-entry journal. See 07.
+DLG — Default Loss Guarantee. A defined credit-risk arrangement in digital lending subject to applicable regulatory conditions; not an unrestricted guarantee. See 08.
+DLA/LSP — Digital Lending App / Lending Service Provider. Technology/service roles associated with lending; the regulated lender remains accountable for duties assigned by applicable directions. See 08.
+Double-entry ledger — Method where each journal event has balanced debits and credits; operational ledgers should preserve immutable event history and use reversals/corrections. See 07.
+FEMA — Foreign Exchange Management Act. Indian framework for foreign exchange transactions; permission depends on transaction type, participant, purpose, and current rules. See 14.
+FIP/FIU — Financial Information Provider / Financial Information User in the AA ecosystem. Provider holds data; user receives permitted data for a stated purpose under consent. FIU here does not mean FIU-IND unless AML context makes that explicit. See 09, 12.
+IFSC — Indian Financial System Code. Bank-branch identifier used in specified Indian electronic funds transfer routing. See 01, 02.
+Idempotency key — Client-supplied or generated key to recognize retries as the same logical request; scope and retention must be defined. Prevents duplicate effects when implemented correctly. See 06.
+IMPS — Immediate Payment Service. NPCI retail instant payment service, available continuously as per product description; channel/participant limits may vary. See 02.
+Issuer — Customer's card/payment instrument provider, responsible for account-side authorization and related functions. See 03.
+KFS — Key Facts Statement. Standardized summary of key loan terms/costs where applicable under current RBI requirements; exact form/applicability must be verified. See 08.
+KYC — Know Your Customer. Identity and customer due diligence process; exact method depends on entity, risk, product, and current requirements. See 12.
+Ledger balance — Book balance recorded by an account system at a point in time; pending authorizations/holds can make available balance differ. See 01, 07.
+LMS/LOS — Loan Management System / Loan Origination System. Origination handles application/decision workflow; servicing system manages booked loan lifecycle. Product architectures vary. See 08.
+MDR — Merchant Discount Rate. Merchant-side charge/fee structure for acceptance, set by applicable rules and contracts; do not assume one universal rate. See 03.
+NEFT — National Electronic Funds Transfer. RBI-operated deferred net settlement system using batches; consult current RBI FAQ for operating hours and timelines. See 02.
+NPCI — National Payments Corporation of India. Retail payment system operator/organization for multiple domestic payment products; product roles differ. See 00, 02.
+NACH mandate / e-mandate — Customer-authorized recurring debit instruction handled through relevant mandate rails and controls. “Auto-debit.” See 02, 08.
+PA/PG — Payment Aggregator / Payment Gateway. PA facilitates merchant acceptance and fund flow under applicable rules; PG provides technology routing without necessarily handling funds. Contract and actual conduct matter. See 03.
+PPI — Prepaid Payment Instrument. Stored-value instrument category governed by RBI directions, with product-specific limits and requirements. See 03.
+PSP/TPAP — Payment Service Provider / Third-Party Application Provider. Terms used in payment ecosystems; exact responsibility follows applicable scheme rules and contracts. See 00, 02.
+Reconciliation break — Difference between independent records (for example, processor, bank statement, internal ledger, or settlement file) requiring investigation and resolution. See 05.
+Reversal — Compensating entry/action that cancels or offsets an earlier effect while preserving history; not synonymous with refund. See 04, 07.
+RTGS — Real Time Gross Settlement. RBI system settling funds individually in real time; current eligibility, hours, and limits are in RBI material. See 02.
+Settlement — Final discharge/transfer of obligations between participants under the relevant rail's rules; customer status message and settlement are separate events. See 02, 05.
+STP — Straight Through Processing. Automated handling without manual intervention; exception queues remain necessary. See 05, 06.
+TAT — Turnaround Time. Stated service or resolution interval. It is not a universal promise unless a rule/contract makes it applicable. See 04, SOURCE_REGISTER.
+UTR/RRN — Unique Transaction Reference / Retrieval Reference Number. References used to identify or trace a transfer/transaction; exact field/format depends on rail. See 02, 04.
+UPI/VPA — Unified Payments Interface / Virtual Payment Address. NPCI instant payment system / address form used for routing; a VPA is not a bank account number. See 02.
+Webhook retry — Re-delivery after uncertain acknowledgement. Receiver should deduplicate and return appropriate acknowledgement to prevent repeated downstream effects. See 06.
+
+QUERY SYNONYMS FOR RETRIEVAL
+“money deducted but merchant did not get it”; “debited but pending”; “UPI failed but account debited”; “payment timeout”; “success shown but payout missing” -> 02, 04, 05.
+“merchant settlement missing”; “batch mismatch”; “bank statement doesn't match dashboard”; “payout short” -> 05, 07.
+“bank API callback repeated”; “same request twice”; “webhook duplicate” -> 06, 07.
+“loan app vs actual lender”; “who disburses”; “loan servicing” -> 08, 00, 12.
+“share bank data with lender”; “AA consent”; “FIP/FIU” -> 09, 08.
+“KYC pending”; “why re-verification”; “suspicious transaction review” -> 12, 13.
+“payment gateway vs aggregator”; “who holds merchant money” -> 03, 00.
+“Aadhaar fingerprint payment”; “BC micro ATM”; “DBT failed” -> 15, 02, 04.
+“cross-border payment stuck”; “SWIFT tracking”; “FX deducted” -> 14, 05, 12.

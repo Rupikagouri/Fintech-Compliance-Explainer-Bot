@@ -1,6 +1,6 @@
 # FinTech Knowledge Base and Application Notes
 
-The assistant answers practical questions about payment workflows using the source documents in `data/`. Those documents describe how a transaction moves between a customer, app/provider, bank, payment network, merchant/acquirer, and settlement system; they include exception handling and source links. The knowledge base is not a collection of general AI, machine-learning, or economy definitions.
+The assistant answers questions about Indian fintech products, infrastructure, software, operations, and compliance using UTF-8 documents in `data/` and `knowledge_base/india_fintech/`. The scope excludes general personal finance, investing tutorials, standalone stock-market education, and unrelated corporate finance. WealthTech coverage concerns fintech product and servicing workflows only.
 
 ## Retrieval sources
 
@@ -13,14 +13,16 @@ The assistant answers practical questions about payment workflows using the sour
 | `data/payment_failures_and_complaints.txt` | Failure triage, applicable reversal timelines, and complaint escalation |
 | `data/payment_roles_and_lifecycle.txt` | Participants and the distinction among initiation, posting, clearing, settlement, and confirmation |
 
-The source documents link to primary RBI, NPCI, Visa, and government references. They identify the rail and transaction case for a timing or rule instead of presenting one deadline as universal. Because regulations and scheme rules can change, time-sensitive answers should be checked against the linked source and the user's bank/provider.
+The modular collection covers payments, banking APIs/core systems, lending technology, Account Aggregators, embedded finance, InsurTech, WealthTech operations, RegTech, KYC/AML, fraud/security, settlement/reconciliation, ledgers, and fintech engineering. `knowledge_base/india_fintech/MANIFEST.txt`, `GLOSSARY.txt`, `SOURCE_REGISTER.txt`, and `COVERAGE_MATRIX.txt` provide inventory, terms, official sources, caveats, and topic mapping. Check the exact source, effective date, entity, and rail for time-sensitive rules.
 
 ## Application layout
 
 - `app.py` renders the Streamlit chat experience.
-- `rag_pipeline.py` loads text documents from `data/`, splits and embeds them, and builds retrieval.
+- `rag_pipeline.py` loads `.txt` files recursively from `data/` and `knowledge_base/india_fintech/`, preserves metadata, splits and embeds them, and builds retrieval.
 - `answer_pipeline.py` combines retrieved context with the Gemini model.
 - `safety.py` applies the assistant's scope and response constraints.
 - `index.html` and `templates/index.html` are project overview/launch pages; the chat UI itself is served by Streamlit.
 
 The assistant is informational. It cannot see a customer's bank account, inspect a transaction, or determine why a regulated institution applied an internal control.
+
+The FAISS index is in-memory and rebuilt when the application starts. Restart the app after changing documents. Full semantic retrieval and generation require the dependencies in `requirements.txt` and a server-side Gemini API key.

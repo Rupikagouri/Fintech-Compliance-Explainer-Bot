@@ -1,0 +1,42 @@
+DOCUMENT_ID: IN-FINTECH-09
+TITLE: Account Aggregators, Consent-Based Data Sharing, Open Banking, Embedded Finance
+DOMAIN: Indian fintech data infrastructure
+SUBDOMAIN: AA ecosystem, consent artifacts, embedded services
+COUNTRY: India
+APPLICABILITY: RBI NBFC-AA framework and participating ecosystem; data provider coverage varies
+LAST_VERIFIED: 2026-10-09; RBI AA Directions checked through 6 Sep 2024; confirm later amendments
+SOURCE_URLS: https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=10598 | https://sahamati.org.in/account-aggregator/
+KEY_TERMS: Account Aggregator, AA, FIP, FIU, consent artefact, financial information, data fiduciary, embedded finance, open banking
+RELATED_DOCUMENTS: 00_ecosystem_and_regulator_map.txt, 01_banking_core_and_apis.txt, 06_fintech_api_architecture.txt, 08_digital_lending.txt, 13_fraud_security_privacy.txt
+---
+
+WHAT AN ACCOUNT AGGREGATOR DOES
+An Account Aggregator (AA) is a consent manager/data-transfer intermediary in India's regulated financial information-sharing framework. It obtains/manages customer consent and facilitates secure transfer of specified financial information from a Financial Information Provider (FIP) to a Financial Information User (FIU). It is not a credit bureau, a lender, a bank account, a wallet, or a general-purpose data broker. The AA framework is designed so the customer's information is transferred under a consent artefact with purpose, data type, recipient, date/time/expiry and other defined attributes. An AA should not ask/store customer credentials that authenticate the customer to an FIP.
+
+PARTICIPANTS
+Customer/data principal; FIP (bank, insurer, pension, securities or other participating institution as covered); AA; FIU (regulated lender or another eligible user); consent manager interface; FIP/FIU adapters; security/tokenization and audit services. The legal role and permitted data classes depend on the current RBI directions and ecosystem participation.
+
+CONSENT-BASED DATA FLOW
+1. FIU explains purpose (for example, assess a loan request) and identifies requested data classes, date range, frequency, recipient and retention/usage basis.
+2. Customer selects FIP accounts and reviews consent artefact: what data, why, who receives it, how often, start/end, revoke/expire options.
+3. Customer authenticates directly through FIP's approved user journey; AA does not collect the FIP password/PIN.
+4. FIP verifies authorization, packages requested data and sends it securely through the AA; in standard AA architecture the AA facilitates transport and should not use the data for its own unrelated purpose.
+5. FIU receives data, validates provenance, completeness, timestamps and units, then uses only for disclosed purpose and applicable legal basis. It stores minimum required records and logs data access/decision lineage.
+6. Customer can inspect/revoke future consent where framework permits; prior lawful processing and record-retention obligations may still remain. Revocation does not necessarily erase information already lawfully received or a lender's required loan records.
+
+CONSENT ARTEFACT VERSUS API TOKEN
+Consent artefact records customer authorization and the scope/purpose of a financial data flow. An access token/API credential authenticates a software call. A valid access token does not create customer consent; a consent artefact alone does not authenticate an API client. Both are needed, along with FIP authorization and technical security.
+
+EXAMPLE: CASH-FLOW UNDERWRITING
+A borrower requests a business loan. Lender's FIU asks for consent to obtain six months of selected current-account transaction data from two FIPs, for credit assessment, one-time fetch, with stated recipient. Borrower approves through FIP flows. AA transports data; lender parses credits/debits, marks reversals and internal transfers, checks source/period completeness, derives cash-flow features and stores decision trace. AA does not decide credit. Lender remains accountable for underwriting and KFS/disclosure under lending rules.
+
+EMBEDDED FINANCE
+Embedded finance presents a financial function inside a nonfinancial journey (e.g. checkout loan offer, insurance quote in travel booking, business settlement account in marketplace). The host app provides distribution/interface; licensed bank/NBFC/insurer/payment entity remains responsible for regulated product decisions within its role. Integration needs entity disclosure, consent, data minimization, API security, product suitability/process controls, transparent fees, complaint routing, and explicit system-of-record boundaries. “Embedded” does not mean regulation is embedded in the retailer or delegated away.
+
+TECHNICAL AND OPERATIONAL CONTROLS
+Consent ID, purpose, data class, account handle, request ID, FIP/FIU/AA IDs, period, timestamps, expiry, revocation, token, schema version, data provenance and fetch status are traceable. Idempotently handle retries; encrypt payloads; verify identities and signatures; alert on overbroad/expired consent; prevent use outside purpose; maintain deletion/retention controls; avoid credentials; test partial data, stale records, duplicate delivery and revocation races. Financial data is not always accurate or sufficient to infer income/creditworthiness—model validation and explainability remain necessary.
+
+SOURCES
+RBI NBFC Account Aggregator Directions, updated 6 Sep 2024: https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=10598
+Sahamati (industry body, explanatory ecosystem materials; not regulator): https://sahamati.org.in/account-aggregator/
+The RBI source is authoritative for legal requirements; industry diagrams/protocols can evolve and are not themselves regulations.

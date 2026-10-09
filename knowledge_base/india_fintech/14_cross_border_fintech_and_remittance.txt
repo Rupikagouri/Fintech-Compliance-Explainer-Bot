@@ -1,0 +1,36 @@
+DOCUMENT_ID: IN-FINTECH-14
+TITLE: Cross-Border Payments and Remittance Operations for Indian FinTech
+DOMAIN: Cross-border fintech operations
+SUBDOMAIN: inward/outward remittance, FX, correspondent banks, PA-CB
+COUNTRY: India
+APPLICABILITY: Conceptual flow; FEMA permissions, purpose codes, limits and reporting are transaction-specific
+LAST_VERIFIED: 2026-10-09; RBI PA-CB circular checked; current FEMA rules require transaction-specific review
+SOURCE_URLS: https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12561 | https://www.rbi.org.in/ | https://www.indiacode.nic.in/
+KEY_TERMS: FEMA, AD bank, SWIFT, BIC, correspondent bank, nostro, vostro, FX spread, purpose code, inward remittance, outward remittance, PA-CB
+RELATED_DOCUMENTS: 00_ecosystem_and_regulator_map.txt, 01_banking_core_and_apis.txt, 03_merchant_and_card_processing.txt, 05_settlement_reconciliation.txt, 12_regtech_kyc_aml.txt
+---
+
+MESSAGE IS NOT MONEY
+SWIFT is a financial messaging network/standard ecosystem; a SWIFT/BIC identifies an institution/address, not a deposit or transfer by itself. A cross-border payment can involve instruction messages, correspondent accounts, FX conversion, sanctions/AML controls, settlement through one or more banks, and beneficiary posting. Each intermediary can have its own reference and fee.
+
+CORRESPONDENT BANKING TERMS
+Nostro: our account held with another bank, described from the account-owning bank's perspective. Vostro: your account held with us, from receiving bank perspective. Correspondent bank supplies access to currency/market/payment system where the sender or recipient bank lacks direct membership. Intermediary deductions, cut-off calendars, holidays, compliance review and FX value dates can affect amount/timing.
+
+SIMPLIFIED OUTWARD REMITTANCE FLOW
+Indian customer instructs bank/authorized channel with beneficiary, bank identifiers, amount/currency, purpose and required declarations -> authorized dealer (AD) bank validates identity, purpose, available permissions, documentation, limits/tax collection obligations applicable at that time -> bank quotes FX rate/spread/fees and debits INR -> bank or partner sends international payment instruction through correspondent/network -> intermediary institutions screen and settle -> beneficiary bank credits foreign-currency account or returns payment -> sender receives final status/foreign reference -> bank reconciles nostro statement, fees, FX and regulatory reporting. The exact legal route varies by remittance purpose and product.
+
+INWARD REMITTANCE FLOW
+Foreign remitter sends through partner/bank -> correspondent/AD bank receives foreign currency and message -> compliance/purpose checks and FX conversion if customer wants INR -> beneficiary identity/account validated -> INR credit posted or clarification/return generated -> inward reference and advice shared -> bank reconciles foreign nostro and fees. Receipt into account is different from message arrival.
+
+FX PRICE AND EXAMPLE
+If a provider sells USD 100 at an illustrative ₹83.40/USD and charges ₹250 disclosed fee, gross INR debit is ₹8,340 + ₹250 = ₹8,590 before any other applicable tax/charges. Actual customer rate may include spread from market reference; provider must disclose its applied rate/fees as required by product rules. Exchange rates move; example is not current quote.
+
+PA-CB AND E-COMMERCE
+RBI's 31 Oct 2023 circular brings entities facilitating cross-border payment transactions for import/export of goods/services under PA-CB (Payment Aggregator–Cross Border) directions, with role-specific due diligence, registration/authorization and settlement requirements. Domestic PA, PG, AD bank, exporter/importer and PA-CB may be separate. The PA-CB must not be confused with international card network or SWIFT. Confirm current amended RBI direction and authorization status before mapping a production flow.
+Official circular: https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12561
+
+FAILURES AND OPERATIONS
+Wrong beneficiary/intermediary bank; missing purpose/document; invalid account; sanctions/name-screen alert; correspondent rejection; intermediary fee; FX value-date mismatch; returned payment; network timeout; duplicate instruction; partial beneficiary credit (where product allows). Preserve sender's instruction ID, UETR or bank reference where provided, correspondent refs, currency/amounts, FX quote, beneficiary details and return reason. Query status before resubmitting, reconcile foreign statement and INR account, and escalate through AD bank. Do not promise universal reversal time.
+
+COMPLIANCE CAUTION
+FEMA, RBI AD-bank directions, remittance schemes, sanctions, tax collection/withholding and purpose documentation are specific to transaction type, residency, amount, entity and effective date. This document deliberately avoids stating current LRS thresholds/tax rates. Verify current RBI/FEMA/Income Tax official material for live requirements; no generic “all remittances are allowed” answer is safe.

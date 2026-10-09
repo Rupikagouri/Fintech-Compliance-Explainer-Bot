@@ -17,12 +17,13 @@ Environment variable required
 from __future__ import annotations
 
 import os
+import hashlib
+import re
 from pathlib import Path
 from typing import Any
 
 import faiss
 from langchain_community.docstore.in_memory import InMemoryDocstore
-from langchain_community.document_loaders import DirectoryLoader, TextLoader
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
@@ -31,6 +32,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from sentence_transformers import CrossEncoder
 
 DATA_PATH = Path(__file__).resolve().parent / "data"
+KNOWLEDGE_BASE_PATH = Path(__file__).resolve().parent / "knowledge_base" / "india_fintech"
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 RERANKER_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 
@@ -42,16 +44,17 @@ GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
 # ---------------------------------------------------------------------------
 
 PROMPT_TEMPLATE = """\
-You are a helpful FinTech compliance and payment-process explainer.
+You are an Indian fintech systems explainer. Answer in clear English, adjusting depth to the question.
 
 RULES:
-- Answer ONLY using the provided context below.
-- If the answer is not found in the context, respond with exactly:
-  "I don't have enough information in my knowledge base to answer that. \
-Please consult your bank or a qualified professional."
-- Do NOT give personalised financial advice or product recommendations.
-- Do NOT process, initiate, or describe how to process real transactions.
-- Be clear, factual, and easy to understand.
+- Use supplied sources as evidence. Explain stable technical concepts, but mark them as general practice when unsourced.
+- For Indian legal, regulatory, limit, fee, or deadline claims, use sourced evidence and state its effective/verification date. If evidence is missing or may be stale, say so.
+- Explain participants, sequence, exchanged data, message states, money movement, accounting, failures, recovery, and security as relevant.
+- Synthesize multiple documents when needed. Distinguish mandatory regulation from illustrative architecture and industry practice.
+- Cite supporting documents inline using supplied labels, e.g. [Source: knowledge_base/india_fintech/02_payment_rails.txt]. Never invent sources.
+- If context does not support an important part of the answer, identify the gap instead of guessing.
+- Stay within Indian fintech systems and workflows. Do not provide personalized financial, legal, tax, insurance, or investment advice.
+- Never claim to inspect a user's account or process a real transaction. Never request OTPs, PINs, CVVs, passwords, or complete credentials.
 
 Context:
 {context}
@@ -80,17 +83,31 @@ def load_documents(data_path: str | Path = DATA_PATH) -> list[Document]:
     if not directory.is_dir():
         raise FileNotFoundError(f"Data directory not found: {directory}")
 
-    files = sorted(directory.glob("**/*.txt"))
+    roots = [directory]
+    if directory.resolve() == DATA_PATH.resolve() and KNOWLEDGE_BASE_PATH.is_dir():
+        roots.append(KNOWLEDGE_BASE_PATH)
+    files = sorted({p.resolve() for root in roots if root.is_dir() for p in root.rglob("*.txt")})
     if not files:
         raise ValueError(f"No .txt files found in data directory: {directory}")
 
-    loader = DirectoryLoader(
-        str(directory),
-        glob="**/*.txt",
-        loader_cls=TextLoader,
-        loader_kwargs={"encoding": "utf-8"},
-    )
-    return loader.load()
+    project_root = Path(__file__).resolve().parent
+    documents: list[Document] = []
+    for path in files:
+        text = path.read_text(encoding="utf-8")
+        metadata: dict[str, Any] = {}
+        body = text
+        if text.startswith("DOCUMENT_ID:") and "\n---\n" in text:
+            header, body = text.split("\n---\n", 1)
+            for line in header.splitlines():
+                if ":" in line:
+                    key, value = line.split(":", 1)
+                    metadata[key.strip().lower()] = value.strip()
+        rel = path.relative_to(project_root).as_posix() if path.is_relative_to(project_root) else path.name
+        metadata.update({"source": rel, "source_filename": path.name,
+                         "document_id": metadata.get("document_id", path.stem),
+                         "title": metadata.get("title", path.stem)})
+        documents.append(Document(page_content=body.strip(), metadata=metadata))
+    return documents
 
 
 def split_documents(docs: list[Document]) -> list[Document]:
@@ -98,10 +115,24 @@ def split_documents(docs: list[Document]) -> list[Document]:
 
     Each chunk receives a sequential ``chunk_id`` in its metadata.
     """
-    splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+    splitter = RecursiveCharacterTextSplitter(chunk_size=900, chunk_overlap=120,
+        separators=["\n\n", "\n", ". ", " ", ""], add_start_index=True)
     chunks = splitter.split_documents(docs)
+    headings_by_source: dict[str, list[tuple[int, str]]] = {}
+    for doc in docs:
+        source = str(doc.metadata.get("source", ""))
+        headings_by_source[source] = [(m.start(), m.group(1).strip()) for m in re.finditer(
+            r"(?m)^([A-Z][A-Z0-9 /&(),’'’—–:-]{3,})\s*$", doc.page_content
+        )]
     for chunk_id, chunk in enumerate(chunks):
         chunk.metadata["chunk_id"] = chunk_id
+        source = str(chunk.metadata.get("source", ""))
+        start = int(chunk.metadata.get("start_index", 0))
+        preceding = [title for position, title in headings_by_source.get(source, []) if position <= start]
+        chunk.metadata["section"] = preceding[-1] if preceding else str(chunk.metadata.get("title", "Document"))
+        chunk.metadata["chunk_uid"] = hashlib.sha256(
+            f"{source}:{chunk_id}:{chunk.page_content}".encode("utf-8")
+        ).hexdigest()[:20]
     return chunks
 
 
@@ -219,7 +250,8 @@ def build_grounded_answer(
     Returns the text content of the response.
     """
     context_text = "\n\n---\n\n".join(
-        chunk.page_content for chunk in context_chunks
+        f"[Source: {chunk.metadata.get('source', 'unknown')} | Section: {chunk.metadata.get('section', 'document')} | Title: {chunk.metadata.get('title', 'Untitled')}]\n{chunk.page_content}"
+        for chunk in context_chunks
     )
     prompt = prompt_template.format_messages(
         context=context_text, question=question
@@ -249,7 +281,7 @@ def build_pipeline(data_path: str | Path = DATA_PATH) -> dict[str, Any]:
     chunks = split_documents(documents)
     vector_store = build_vector_store(chunks)
     return {
-        "retriever": build_retriever(vector_store, k=5),
+        "retriever": build_retriever(vector_store, k=10),
         "llm": _build_gemini_llm(),
         "prompt": ChatPromptTemplate.from_template(PROMPT_TEMPLATE),
         "reranker": CrossEncoder(RERANKER_MODEL),

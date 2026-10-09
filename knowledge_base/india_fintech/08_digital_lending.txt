@@ -1,0 +1,46 @@
+DOCUMENT_ID: IN-FINTECH-08
+TITLE: Indian Digital Lending: Application, Underwriting, Disbursal, Servicing, Collections
+DOMAIN: Lending technology
+SUBDOMAIN: digital lending lifecycle, LOS/LMS, LSP, repayment
+COUNTRY: India
+APPLICABILITY: RBI-regulated digital lending concepts; verify current 2025 Directions and lender-specific terms
+LAST_VERIFIED: 2026-10-09; RBI materials checked, latest Digital Lending Directions 2025 requires rule-by-rule review
+SOURCE_URLS: https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12382 | https://www.rbi.org.in/scripts/AnnualReportPublications.aspx?Id=1436 | https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=11566
+KEY_TERMS: regulated entity, RE, LSP, DLA, LOS, LMS, KFS, APR, underwriting, sanction, EMI, mandate, delinquency, NPA, DLG
+RELATED_DOCUMENTS: 00_ecosystem_and_regulator_map.txt, 01_banking_core_and_apis.txt, 06_fintech_api_architecture.txt, 07_ledger_and_accounting_entries.txt, 09_account_aggregator_and_embedded_finance.txt, 12_regtech_kyc_aml.txt
+---
+
+WHO LENDS?
+The regulated entity (RE)—for example a bank or NBFC within RBI's jurisdiction—is the lender of record and owns regulatory lending obligations. A digital lending app (DLA) is a mobile/web interface. A lending service provider (LSP) may acquire customers, provide underwriting support, servicing, monitoring or recovery functions as an agent. A product's brand/app is not proof it is itself the lender. Display the RE, agreement, key terms, grievance owner and flow of funds clearly.
+
+LIFECYCLE AND SYSTEMS
+1. Discovery/consent: app presents offers, lender identity, eligibility/disclosures and privacy notices; customer gives separate necessary permissions. Avoid dark patterns and unnecessary data collection.
+2. Application: collect minimum required identity, contact, income, employment/business and requested-loan inputs. Record source, consent, timestamp and purpose. A customer can correct data.
+3. KYC and fraud checks: RE performs applicable CDD; device/identity and document checks support but do not replace legal KYC. Consent-based financial data may arrive via Account Aggregator; see 09.
+4. Underwriting: decision engine estimates repayment ability, credit risk, policy eligibility, exposure, pricing and limits. Automated score is a decision support/control, not a legal guarantee. Store versioned features, decision reasons and human overrides as required by policy.
+5. Sanction: lender decides approved principal, rate type, fees, tenor, schedule, collateral/guarantee, conditions and expiry. Customer receives contract and Key Fact Statement (KFS) under applicable rules. APR represents annualized all-inclusive loan cost as defined by current directions; actual quote depends on calculation method and disclosed charges.
+6. Acceptance/e-sign: customer accepts the lender's terms; contract version and authentication evidence are retained.
+7. Disbursal: lender transfers funds to borrower or permitted end-beneficiary via regulated account flow. RBI's Digital Lending Directions specify funds-flow/customer-protection conditions; do not send disbursal to an LSP pool account except where a stated exception applies.
+8. Servicing: LMS records principal, accruals, due schedule, payment allocations, statements, queries, rate resets, prepayment, mandate status and fees.
+9. Repayment: payment comes through UPI/NACH/card/netbanking/other contracted route; rail status is reconciled to loan account. Debit event alone does not prove LMS allocation.
+10. Collections/closure: due reminders, grace/overdue classification, authorized collection actions, complaint resolution, prepayment quote, final settlement and no-dues/charge release follow contract and rules.
+
+LOS AND LMS
+Loan Origination System (LOS) manages application, documentation, KYC, credit decision, offers, sanction and disbursal handoff. Loan Management System (LMS) manages booked facility, schedule, accrual, due/receipt allocation, delinquency, modification, recovery, closure and statements. A credit decision platform may be a component of LOS or external. Source of truth for contractual schedule should be explicit and reconciled with accounting/GL.
+
+EMI EXAMPLE (REDUCING-BALANCE FORMULA)
+For principal P, monthly periodic rate r and n months, EMI = P*r*(1+r)^n / ((1+r)^n - 1). This assumes fixed periodic rate and equal end-period installments; fees, day-count, floating resets, rounding and lender contract can differ. Example P=₹120,000, nominal annual rate 12%, monthly r=0.01, n=12 -> EMI about ₹10,661.85. Total scheduled payments about ₹127,942.20; interest about ₹7,942.20 before fees and rounding. First month interest ₹1,200, principal about ₹9,461.85, closing principal about ₹110,538.15. A production LMS uses exact schedule conventions and currency rounding.
+
+PAYMENT ALLOCATION AND DELINQUENCY
+An EMI receipt can be allocated among charges, penal charges where permitted, interest and principal according to contract and law. Partial/late receipt creates a different state from payment initiation. If a ₹10,662 debit is pending but not settled, LMS may remain due; after confirmed receipt it applies amount and recalculates outstanding. Delinquency bucket is based on due date/payment history under applicable rules. Non-performing asset (NPA) classification and provisioning follow lender category and current RBI prudential directions; do not invent a universal day count without checking current lender-specific applicability.
+
+FAILURES AND CONTROLS
+Duplicate loan application; identity mismatch; stale bank statement; consent expired; bureau unavailable; wrong account; duplicate disbursal; mandate inactive; payment debit with no loan-credit; split payment; reversed collection; statement mismatch; fraud model false positive; collection-agent complaint. Use idempotent disbursal IDs, approval state machine, direct settlement trace, daily repayment-to-LMS reconciliation and immutable schedule revisions. Do not re-disburse because a timeout alone leaves outcome unknown.
+
+REGULATORY SOURCE STATUS
+RBI 2022 Digital Lending Guidelines (historical foundational circular): https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12382
+RBI Annual Report states final RBI Digital Lending Directions 2025 were issued; this source register has not independently verified each provision in the 2025 consolidated text. Check the latest RBI Master Directions/notifications before applying a specific requirement: https://www.rbi.org.in/scripts/AnnualReportPublications.aspx?Id=1436
+RBI KYC Direction: https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=11566
+
+COMMON MISCONCEPTIONS
+An app is not necessarily the lender. An approval screen is not disbursal. A repayment app status is not necessarily a loan-ledger posting. A write-off does not automatically cancel a borrower's legal obligation. APR is not simply nominal interest; it is a disclosed annualized cost measure under the applicable computation framework.

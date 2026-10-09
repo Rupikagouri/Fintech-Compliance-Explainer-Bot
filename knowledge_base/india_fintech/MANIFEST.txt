@@ -1,0 +1,44 @@
+DOCUMENT_ID: IN-FINTECH-MANIFEST
+TITLE: Indian FinTech Knowledge Base Manifest
+DOMAIN: Collection index
+COUNTRY: India
+LAST_VERIFIED: 2026-10-09
+---
+
+PURPOSE AND SCOPE
+This collection explains Indian fintech products, infrastructure, software, operations, controls, and applicable regulation. It excludes generic personal finance, investment tutorials, standalone market education, and unrelated corporate finance. WealthTech content is restricted to product/system workflows and operational controls.
+
+STATUS KEY
+COMPLETE = explanatory baseline implemented; not a claim that every edge case or current circular is exhaustively covered.
+PARTIAL = core workflow covered; listed volatile rules, institution-specific procedures, or specialist details need further source verification.
+SOURCE-VERIFIED = primary source/page checked on 2026-10-09; not a guarantee that no later amendment exists.
+ILLUSTRATIVE = architecture, accounting mapping, or example describes a common model and is not a universal implementation.
+
+DOCUMENT INVENTORY
+00_ecosystem_and_regulator_map.txt | ecosystem, entity roles, regulatory perimeter | COMPLETE / PARTIAL current-law details
+01_banking_core_and_apis.txt | bank accounts, CBS, API integration, balances and identifiers | COMPLETE / PARTIAL bank-specific APIs
+02_payment_rails.txt | UPI, IMPS, NEFT, RTGS, AePS, NACH, BBPS, NETC | COMPLETE / PARTIAL live limits and scheme changes
+03_merchant_and_card_processing.txt | merchant onboarding, cards, wallets, PA/PG, refunds | COMPLETE / PARTIAL current network rules
+04_payment_states_and_failure_recovery.txt | states, timeouts, reversals, disputes and recovery | COMPLETE / PARTIAL current TAT updates
+05_settlement_reconciliation.txt | clearing, settlement, payouts, files and breaks | COMPLETE / PARTIAL participant-specific formats
+06_fintech_api_architecture.txt | APIs, events, idempotency, retries, resilient system design | COMPLETE / ILLUSTRATIVE engineering patterns
+07_ledger_and_accounting_entries.txt | ledgers, double entry, subledgers, reversals | COMPLETE / ILLUSTRATIVE account mappings
+08_digital_lending.txt | LOS/LMS, underwriting, KFS, disbursement, servicing, collection | COMPLETE / PARTIAL Digital Lending Directions 2025 rule-by-rule validation
+09_account_aggregator_and_embedded_finance.txt | AA, consent artifacts, FIP/FIU, embedded finance | COMPLETE / PARTIAL post-2024 amendments and participant coverage
+10_insurtech_workflows.txt | policy distribution, premium collection, claims systems | COMPLETE / PARTIAL product-specific/current IRDAI rules
+11_wealthtech_product_workflows.txt | onboarding and product servicing system workflows | COMPLETE / PARTIAL intermediary-specific rules
+12_regtech_kyc_aml.txt | KYC, CDD, AML/CFT, alerts, reporting | COMPLETE / PARTIAL post-2024 amendments and covered-entity nuances
+13_fraud_security_privacy.txt | fraud typologies, security controls, incident response | COMPLETE / PARTIAL current sector-specific cyber rules
+14_cross_border_fintech_and_remittance.txt | remittance, FX, correspondent banking, PA-CB | COMPLETE / PARTIAL purpose-specific FEMA conditions
+15_financial_inclusion_and_public_infrastructure.txt | DBT, AePS, Aadhaar-enabled flows, inclusion | COMPLETE / PARTIAL scheme eligibility and live rules
+16_fintech_data_risk_and_observability.txt | data, metrics, model risk, monitoring and traceability | COMPLETE / ILLUSTRATIVE models and governance
+GLOSSARY.txt | acronyms, synonyms and document cross-references | COMPLETE / expandable
+SOURCE_REGISTER.txt | official source catalog, topic mapping and currency caveats | COMPLETE / PARTIAL volatile current rules
+COVERAGE_MATRIX.txt | user-requested domain-to-document mapping | COMPLETE
+MANIFEST.txt | inventory and status | COMPLETE
+
+INGESTION
+The primary loader reads UTF-8 .txt files recursively from data/ and knowledge_base/india_fintech/. It strips this front matter at the --- delimiter, preserves metadata, and adds a relative source path. It creates an in-memory FAISS index at app startup; there is no persisted or incremental index to migrate. Restart/rebuild the app after editing documents.
+
+LIMITATIONS
+This is a broad explanatory foundation, not a legal opinion, complete rulebook, bank-specific runbook, or source of live transaction status. Check the relevant regulator, rail, contract, and effective date before operational decisions. Refer to SOURCE_REGISTER.txt for verification gaps.

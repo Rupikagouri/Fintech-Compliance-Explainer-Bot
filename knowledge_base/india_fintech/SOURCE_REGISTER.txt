@@ -1,0 +1,78 @@
+DOCUMENT_ID: IN-FINTECH-SOURCES
+TITLE: Official Source Register and Verification Limits
+DOMAIN: Source index
+COUNTRY: India
+LAST_VERIFIED: 2026-10-09
+---
+
+VERIFICATION METHOD
+Primary regulator, scheme, or government source pages were checked for the topics below on 2026-10-09. This date records this collection's source review, not confirmation that each page contains a consolidated, current statement of every applicable requirement. A listed source supports a topic; it does not automatically validate every statement in every document. Verify circular status, amendments, effective dates, and entity scope before relying on a time-sensitive rule.
+
+RBI — Reserve Bank of India
+URL: https://www.rbi.org.in/
+Supports: regulated banks/NBFCs/payment systems, master directions, circulars, consumer FAQs.
+Specific references:
+- RTGS FAQ: https://www.rbi.org.in/scripts/FS_FAQs.aspx?Id=65 (operating model and FAQ content; FAQ page dated/updated 2022 in source view).
+- NEFT FAQ: https://www.rbi.org.in/Scripts/FAQView.aspx?Id=60 (NEFT operating model; see page for current presentation).
+- KYC Master Direction: https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=11566 (consolidated source with 6 Nov 2024 update reflected in the page view checked).
+- KYC amendment: https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12746.
+- NBFC-AA Directions: https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=10598 (page updated through 6 Sep 2024 in checked page view).
+- Digital Lending 2022 circular: https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12382.
+- RBI Annual Report page referencing Digital Lending Directions 2025: https://www.rbi.org.in/scripts/AnnualReportPublications.aspx?Id=1436.
+- PA-CB circular, 31 Oct 2023: https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12561.
+- Failed transaction TAT circular, 20 Sep 2019: https://www.rbi.org.in/commonman/Upload/English/Notification/PDFs/CIRCULAR677EC931A7A65E4D99AA957D8E85BC0A2A.PDF.
+- Master Directions index: https://www.rbi.org.in/Scripts/BS_ViewMasterDirections.aspx.
+CURRENCY LIMIT: The 2019 failed-transaction circular is historical; check later amendments and the applicable rail/operator rules. The 2022 FAQ and 2024 consolidated directions may have later changes. The 2025 digital lending instrument requires a detailed current clause-level review not completed in this collection.
+
+NPCI — National Payments Corporation of India
+URL: https://www.npci.org.in/
+Supports: retail payment product descriptions, scheme participant roles, UPI/IMPS/NACH/BBPS/AePS/NETC, settlement lifecycle.
+Specific references:
+- UPI FAQs: https://www.npci.org.in/what-we-do/upi/faqs
+- UPI Product Booklet: https://www.npci.org.in/PDF/npci/upi/Product-Booklet.pdf
+- IMPS: https://www.npci.org.in/product/imps (public product overview; page states 24x7 and transaction limit; confirm current participant/channel caps).
+- Settlement lifecycle: https://www.npci.org.in/transaction-settlement-lifecycle
+- NETC: https://www.npci.org.in/product/netc/about-netc
+- AePS: https://www.npci.org.in/product/aeps
+- NACH: https://www.npci.org.in/what-we-do/nach/product-overview
+CURRENCY LIMIT: Product pages describe scheme features and may not expose participant-specific caps, circular changes, or bank channel rules. No unsupported universal message format is asserted.
+
+SEBI — Securities and Exchange Board of India
+URL: https://www.sebi.gov.in/
+Supports: securities intermediary perimeter and WealthTech workflows where securities services are involved.
+References: https://investor.sebi.gov.in/securities-trading.html ; https://investor.sebi.gov.in/depositories.html ; https://www.sebi.gov.in/legal/circulars/.
+CURRENCY LIMIT: The KB does not teach investing. Specific settlement cycles, permissions, disclosure obligations, and intermediary duties are product- and date-dependent; check the current SEBI instrument and exchange/depository rules.
+
+IRDAI — Insurance Regulatory and Development Authority of India
+URL: https://irdai.gov.in/
+References: consolidated regulations https://irdai.gov.in/web/guest/consolidated-gazette-notified-regulations ; grievance page https://irdai.gov.in/grievance-cell-cad.
+Supports: policy servicing, insurance intermediary roles, policyholder and grievance workflows.
+CURRENCY LIMIT: Apply exact product wording and current regulation; no universal claim outcome, exclusion, or claim deadline is asserted.
+
+PFRDA — Pension Fund Regulatory and Development Authority
+URL: https://pfrda.org.in/
+Supports: pension-sector regulator identification where fintech rails/service providers touch pension operations.
+CURRENCY LIMIT: No broad pension product guide is included; product-specific operational rules need a dedicated source review.
+
+FIU-IND — Financial Intelligence Unit–India
+URL: https://fiuindia.gov.in/
+Supports: AML reporting authority context and reporting ecosystem.
+CURRENCY LIMIT: Reporting thresholds, formats, timelines, and covered-person duties require statute/rule/current FIU source confirmation; this KB avoids presenting an unsourced universal threshold.
+
+INDIA CODE / GOVERNMENT / UIDAI / COMPLAINT CHANNELS
+- India Code: https://www.indiacode.nic.in/ (primary legislation text; amendments and commencement dates must be checked).
+- UIDAI: https://uidai.gov.in/ (Aadhaar identity/authentication services; authentication is not itself payment authorization).
+- RBI Complaint Management System: https://cms.rbi.org.in/ (official complaint channel; eligibility/exhaustion criteria must be checked).
+- National Cyber Crime Reporting Portal: https://cybercrime.gov.in/ (reporting channel; does not guarantee recovery).
+- Account Aggregator framework overview, Sahamati: https://sahamati.org.in/account-aggregator/ (ecosystem body, not regulator; use RBI Directions for legal requirements).
+
+OPEN VERIFICATION GAPS
+1. Clause-by-clause requirements/effective dates under RBI Digital Lending Directions 2025.
+2. Current RBI UPI/card failed transaction compensation/reversal directions after the 2019 circular; confirm any superseding or rail-specific rule.
+3. Current 2024 payment-system operator cyber-security directions and amendments, mapped to entity scope.
+4. Current DPDP Act/rules commencement and fintech applicability as of the specific question date.
+5. Current tax, payment limits, charges, complaint deadlines, credit-reporting timelines, and insurance grievance timelines. These are intentionally not hardcoded as timeless rules.
+6. Bank-, PSP-, processor-, network-, and insurer-specific API/file protocols; these are often contractual or proprietary and vary.
+
+SOURCE USE RULE
+An official URL in this register is a starting point, not a blanket citation. For a current legal answer, cite the exact instrument and effective date. If retrieval only supplies a general overview, the chatbot should state that the specific rule was not verified.

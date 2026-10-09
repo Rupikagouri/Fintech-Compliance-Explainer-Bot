@@ -1,0 +1,44 @@
+DOCUMENT_ID: IN-FINTECH-11
+TITLE: Indian WealthTech Product and Data Workflows (System Focus)
+DOMAIN: WealthTech
+SUBDOMAIN: onboarding, order routing, account aggregation, mutual-fund service operations
+COUNTRY: India
+APPLICABILITY: Technology lifecycle overview; products/intermediary permissions differ
+LAST_VERIFIED: 2026-10-09; SEBI investor and intermediary references checked
+SOURCE_URLS: https://investor.sebi.gov.in/securities-trading.html | https://investor.sebi.gov.in/depositories.html | https://www.sebi.gov.in/
+KEY_TERMS: WealthTech, broker, investment adviser, distributor, RTA, depository, demat, folio, order, mandate, NAV, suitability
+RELATED_DOCUMENTS: 00_ecosystem_and_regulator_map.txt, 01_banking_core_and_apis.txt, 06_fintech_api_architecture.txt, 12_regtech_kyc_aml.txt, 13_fraud_security_privacy.txt
+---
+
+SCOPE
+This document explains how digital wealth platforms exchange identity, instructions, money, units/securities, confirmations and records. It is not an investing tutorial or recommendation. A software interface may be operated by a SEBI-registered intermediary, a distributor, an adviser, or a technology provider; these are distinct roles with different permissions and duties. Check the entity's registration and exact service before describing what it may do.
+
+ONBOARDING AND ACCOUNT LINKING
+Customer creates profile -> identity/PAN/KYC and required checks -> selects account/facility -> platform creates intermediary-specific client/folio/broker references -> customer grants mandate/consent where required -> linked bank/depository/RTA data feeds establish eligible holdings or payment route. A demat account holds securities electronically through a depository and Depository Participant; a trading account is with a broker; bank account funds transaction. One number does not stand in for all three.
+
+MUTUAL FUND DIGITAL ORDER (SIMPLIFIED)
+1. Customer selects scheme/order type and provides KYC/folio/amount/units and bank/payment mandate details.
+2. Platform validates form, eligibility, cut-off rules and consent, then routes to registered intermediary/AMC/RTA/transaction platform as appropriate.
+3. Payment authorization/collection proceeds through bank/UPI/netbanking/mandate; transaction status may be pending.
+4. AMC/RTA confirms accepted/rejected order and applies applicable NAV/allotment rules; payment debit, order acceptance and unit allotment are separate states.
+5. RTA/AMC records units in folio or applicable demat arrangement and sends confirmation; platform reconciles statement/cas/custodian feed and bank payment.
+6. Cancellation, switch, redemption, dividend/IDCW and bank payout each have distinct request, validation, settlement and statement events.
+Exact cut-off, value date, NAV applicability, settlement and permitted channel depend on current SEBI/AMFI/AMC operating rules; do not derive it from the time a mobile screen accepted an order.
+
+BROKERED SECURITIES SYSTEM BOUNDARY
+A platform order passes to broker/exchange; exchange matching creates trade; clearing corporation calculates obligations; funds and securities pay-in/payout occur under settlement cycle; depository updates beneficial owner holding. SEBI describes T+1 as the standard Indian equity settlement baseline and T+0 as a separate optional/beta framework introduced for selected stocks/participants; current segment/security rules must be checked. This file intentionally does not explain stock selection, valuation or investment strategy.
+SEBI investor overview: https://investor.sebi.gov.in/securities-trading.html
+Depository workflow: https://investor.sebi.gov.in/depositories.html
+Settlement details/changes: https://www.sebi.gov.in/legal/circulars/ and current exchange circulars.
+
+DATA AGGREGATION AND RECONCILIATION
+Portfolio dashboards may combine broker contract notes, depository statements, AMC/RTA folio feeds, bank statements, and consent-based AA information. Position estimate is not an execution instruction or authoritative current value. Normalize ISIN/folio/account, instrument units, corporate actions, transaction date, settlement date and source timestamp; flag stale prices/duplicate feeds; reconcile to official statements and actual cash. A demat holding view can lag a trade or corporate action.
+
+SYSTEM STATES AND FAILURES
+Order draft -> validated -> submitted -> accepted/pending -> executed/allotted -> settled -> reflected in statement. Alternative terminal states: rejected, expired, cancelled, partially filled, failed payment, refund pending. A browser success redirect does not prove units allotted. Use platform transaction ID plus broker/exchange/RTA reference; do not resubmit uncertain order until status query. Handle duplicate mandate callbacks and split allocation idempotently.
+
+SECURITY AND CONSUMER PROTECTION
+Separate adviser/distributor/broker data scopes; validate order confirmation; secure signing/2FA and mandate authorization; protect PAN, bank and portfolio data; show fees/role/disclosures; keep timestamped audit trail; avoid misleading return claims; official registered intermediary and investor-grievance route matter. Never request a user's trading password, OTP, TPIN, demat authorization secret or full bank credentials in chat.
+
+REGULATORY CAUTION
+SEBI registration, investor-facing activity, data exchange and product-specific rules are changing. The sources here provide system-level guidance. Confirm the applicable SEBI regulation, circular, exchange/depository/RTA instructions, platform role and effective date before describing a live order workflow.

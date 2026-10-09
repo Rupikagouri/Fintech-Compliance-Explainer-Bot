@@ -1,0 +1,47 @@
+DOCUMENT_ID: IN-FINTECH-00
+TITLE: Indian FinTech Ecosystem, Participants, and Regulatory Perimeter
+DOMAIN: Indian fintech ecosystem
+SUBDOMAIN: entity roles, system map, regulatory perimeter
+COUNTRY: India
+APPLICABILITY: Conceptual map; exact legal classification depends on activity, contract, and current law
+LAST_VERIFIED: 2026-10-09; official reference pages checked, see Source Register for currency limits
+SOURCE_URLS: https://www.rbi.org.in/ | https://www.npci.org.in/ | https://www.sebi.gov.in/ | https://irdai.gov.in/ | https://pfrda.org.in/
+KEY_TERMS: fintech, regulated entity, payment system operator, PSP, TPAP, issuer, acquirer, PA, PG, LSP, FIU, RBI, NPCI, SEBI, IRDAI, PFRDA
+RELATED_DOCUMENTS: 01_banking_core_and_apis.txt, 02_payment_rails.txt, 03_merchant_and_card_processing.txt, 08_digital_lending.txt, 09_account_aggregator_and_embedded_finance.txt, 12_regtech_kyc_aml.txt
+---
+
+PURPOSE AND SCOPE
+FinTech means technology used to deliver, distribute, operate, or control financial services. In India it is not one legal category. A mobile application can be a technology interface, an agent of a regulated lender, a payment-system participant, or a regulated financial entity depending on what it actually does. Product branding does not determine regulatory status. Identify the service, who contracts with the customer, who receives or holds money, who makes the regulated decision, and which entity owns the ledger before describing the system.
+
+SYSTEM MAP
+Customer / business -> app or channel -> service provider or intermediary -> regulated institution -> payment, credit, insurance, pension, or securities infrastructure -> counterparty. Data and status messages travel through APIs and networks; money moves only through accounts, settlement systems, or other legally authorized mechanisms. Those paths are related but not identical.
+
+CORE PARTICIPANTS
+RBI (Reserve Bank of India) is India's central bank and regulates banks, specified non-bank financial companies, and payment systems under applicable statutes and directions. It operates RTGS and NEFT and authorizes/supervises relevant payment system operators. RBI does not run every bank's mobile app or decide every individual payment decline.
+NPCI (National Payments Corporation of India) operates several retail payment systems under RBI authorization, including UPI, IMPS, NACH, AePS, BBPS, RuPay and NETC. A system operator defines scheme interfaces/rules and routes or clears messages; participating banks still maintain their own customer accounts and post entries.
+SEBI (Securities and Exchange Board of India) regulates securities markets and registered market intermediaries. Exchanges, clearing corporations, depositories and brokers have separate operating roles; SEBI is not a bank-transfer switch.
+IRDAI (Insurance Regulatory and Development Authority of India) regulates insurance and insurers/intermediaries within its statutory perimeter. An InsurTech front end does not itself become an insurer merely by collecting a quote or claim.
+PFRDA (Pension Fund Regulatory and Development Authority) regulates the National Pension System and other covered pension arrangements. CRA, trustee bank, pension funds, points of presence and annuity providers have distinct functions in that architecture.
+FIU-IND (Financial Intelligence Unit – India) receives and analyses prescribed financial information under AML law. A private app is not entitled to claim that a customer is a suspect just because a transaction was reviewed.
+UIDAI issues Aadhaar-related identity infrastructure rules and services. Aadhaar authentication, e-KYC, a bank's customer due diligence, and payment authorization are separate legal/technical actions.
+
+COMMON FINTECH ROLES (DO NOT TREAT AS SYNONYMS)
+Issuer: entity issuing an instrument or account product, such as a card issuer or PPI issuer.
+Acquirer: merchant-side institution/provider that enables acceptance and routes merchant transactions; in card schemes it submits authorizations/clearing to the network.
+PSP: broad product term for a payment service provider. In UPI, a PSP bank has scheme responsibilities. A TPAP (third-party application provider) supplies a UPI app under sponsor-bank/NPCI arrangements; it does not hold the payer's bank ledger merely because its app shows a balance.
+Payment Gateway (PG): commonly a technical routing/security service between merchant software and acquiring/payment systems. “Gateway” alone does not establish that the provider handles funds.
+Payment Aggregator (PA): an entity that facilitates merchant acceptance and may receive/pool customer funds before settlement to merchants, subject to RBI authorization and current rules. Determine exact flow and licensed entity; a technology contractor may be different from the PA.
+Lending Service Provider (LSP): an agent/service provider doing one or more lender functions on behalf of a regulated lender. Outsourcing does not transfer the lender's regulatory obligations.
+Financial Information Provider/User (FIP/FIU): roles in India's Account Aggregator ecosystem. Here FIU means financial information user, not Financial Intelligence Unit; resolve by context.
+
+TRACE A PRODUCT BEFORE LABELING IT
+For any product, write down: (1) customer contract party, (2) regulated principal, (3) funds-custody/settlement accounts, (4) system of record for each state, (5) message/network operator, (6) outsourced providers, (7) applicable regulator and statute, (8) complaint owner. A UPI app might initiate a payment while payer/payee banks post money and NPCI routes the transaction. A digital loan app may source an application while a bank/NBFC makes the credit decision, funds the borrower, services the loan, and owns the receivable. A claims app may collect evidence while the insurer decides coverage and pays a claim.
+
+ILLUSTRATIVE EXAMPLE
+An Indian shop integrates a checkout SDK. The SDK captures order metadata; a PA contract governs acceptance and merchant payout; an acquiring bank connects to a card network; the issuer approves or declines; the issuer account and acquirer settlement ledger record different legs. The SDK vendor, PA, acquirer, network and issuer are not interchangeable. A customer-facing “payment successful” event can precede the shop's bank payout and accounting reconciliation.
+
+RELATED QUESTIONS AND SEARCH PHRASES
+Who actually holds the money? Is this company a bank, NBFC, PA, PG, LSP, TPAP, or just a software vendor? Who decides a decline? Which system is the ledger of record? Does an app operator settle funds? What is the difference between payment provider and payment gateway?
+
+REGULATORY CAUTION
+Regulatory categories, authorization lists, directions, and effective dates change. This map is a conceptual overview, not a legal opinion or a current license lookup. Check the latest regulator direction and the entity's current authorization before making a compliance determination.

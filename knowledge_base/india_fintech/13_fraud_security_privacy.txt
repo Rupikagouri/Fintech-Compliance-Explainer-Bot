@@ -1,0 +1,36 @@
+DOCUMENT_ID: IN-FINTECH-13
+TITLE: FinTech Fraud, Cybersecurity, Privacy, and Operational Resilience in India
+DOMAIN: FinTech risk and security
+SUBDOMAIN: fraud controls, API security, data protection, incident handling
+COUNTRY: India
+APPLICABILITY: Security patterns plus applicable RBI/sector directions; implementation obligations vary by regulated entity
+LAST_VERIFIED: 2026-10-09; RBI payment security sources checked; confirm later cyber/data protection rules
+SOURCE_URLS: https://www.rbi.org.in/Scripts/BS_ViewMasterDirections.aspx | https://www.rbi.org.in/ | https://cybercrime.gov.in/ | https://irdai.gov.in/
+KEY_TERMS: account takeover, phishing, mule account, device binding, velocity, tokenization, encryption, least privilege, PII, breach, incident response
+RELATED_DOCUMENTS: 03_merchant_and_card_processing.txt, 04_payment_states_and_failure_recovery.txt, 06_fintech_api_architecture.txt, 09_account_aggregator_and_embedded_finance.txt, 12_regtech_kyc_aml.txt
+---
+
+THREAT MODEL
+Assets: customer funds/claims/loan decisions, credentials, identity data, account and payment references, internal keys, models, business continuity. Threat actors may use phishing, remote-access scams, SIM swap, credential stuffing, card-not-present fraud, fake QR/collect requests, insider misuse, malware, API abuse, data exfiltration or provider compromise. A threat model identifies actor, entry point, privilege, impact and control; it is not enough to label everything “cyber fraud.”
+
+COMMON INDIAN USER-FACING PAYMENT SCAMS
+Fake support asks for UPI PIN/OTP or installs screen-sharing app; QR code is presented as a way to receive money even though scanning/approving can authorize a payment; collect request is mistaken for refund; fake loan app harvests contacts/photos; SIM replacement enables account recovery attacks; merchant impersonation changes payout details; phishing copies bank/UPI login. Receiving funds does not require disclosing PIN/CVV/OTP. Banks or genuine support should not require remote-control access or secrecy credentials to reverse a payment.
+
+FRAUD DETECTION PIPELINE
+Event intake -> identity/device/account/merchant/counterparty enrichment -> feature and velocity calculation -> deterministic rules and/or risk model -> risk score/reason codes -> step-up auth, hold, decline or manual review within policy -> feedback/confirmed outcomes -> rule/model monitoring. Signals can include new device, rate of beneficiary creation, amount relative to history, IP/session anomalies, compromised credentials, merchant behavior and graph relationships. These are probabilistic indicators; a model score is not proof. Monitor false positives, false negatives, bias, drift, latency, appeal and control override.
+
+TECHNICAL CONTROLS
+TLS and secure certificate validation; encryption at rest; key management/HSM where required; secrets vault and rotation; least privilege; segregation of duties; MFA for operations; signed/time-bounded webhooks; nonce/replay defense; input validation; rate limits; secure dependency/supply-chain management; patching; backups; tested disaster recovery; network segmentation; audit log integrity; data minimization and retention. Mask credentials and account identifiers in logs; never persist CVV/PIN/OTP. Tokenization replaces sensitive card identifier with a scoped token but does not automatically remove all PCI/RBI/privacy duties.
+
+PRIVACY AND CONSENT IN SYSTEM DESIGN
+Track data source, purpose, lawful basis/consent, permitted recipient, scope, retention period, access history and deletion/retention exception. Data minimization means collect only what is required for the disclosed service/control. Consent should not be bundled deceptively; withdrawal may stop future processing but does not automatically erase records that law requires a regulated entity to retain. India data protection implementation is subject to the applicable Act, rules, commencement notifications and sector directions; do not state a rule effective date without checking official Gazette.
+
+INCIDENT RESPONSE WORKFLOW
+Detect/triage -> protect customer and funds (freeze or step-up only under authority) -> preserve forensic evidence -> notify bank/regulated entity/operator/security contacts under applicable clock -> contain credentials/tokens and rotate keys -> assess scope and affected transactions/data -> customer/regulator/LEA notices when legally required -> restore clean services -> reconcile uncertain transactions -> document root cause, impact and corrective action. A service outage, cyber incident, payment fraud report and personal data breach can trigger different reporting regimes.
+
+CUSTOMER LOSS/DISPUTE HANDLING
+Capture date/time, channel, amount, payment rail, UTR/RRN, account entry, device/call/message evidence, bank complaint ID and actions taken. Customer should contact bank/payment provider via official channels promptly; account-specific liability rules depend on product, customer conduct and applicable RBI/regulator directions. Do not guarantee recovery or chargeback. National Cyber Crime Reporting Portal: https://cybercrime.gov.in/; RBI CMS for eligible bank/payment complaints: https://cms.rbi.org.in/.
+
+REGULATORY CONTEXT
+RBI Master Directions index hosts payment system, digital payment security, PPI and other current directions: https://www.rbi.org.in/Scripts/BS_ViewMasterDirections.aspx
+RBI issued 2024 Master Directions on Cyber Resilience and Digital Payment Security Controls for non-bank Payment System Operators; see RBI payment-system notifications for exact scope and staged effective dates. This source was not checked clause by clause here. Apply control requirements by regulated entity, service, size/category and commencement date rather than importing one checklist into every startup.

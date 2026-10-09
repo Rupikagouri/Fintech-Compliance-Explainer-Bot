@@ -135,7 +135,7 @@ def ask(question: str, pipeline: dict[str, Any]) -> AskResponse:
         pairs = [(question, doc.page_content) for doc in retrieved_docs]
         scores = reranker.predict(pairs)
         ranked = sorted(zip(scores, retrieved_docs), key=lambda x: x[0], reverse=True)
-        top_chunks = [doc for _, doc in ranked[:3]]
+        top_chunks = [doc for _, doc in ranked[:6]]
     else:
         top_chunks = []
     chunk_texts = [chunk.page_content for chunk in top_chunks]
@@ -145,7 +145,10 @@ def ask(question: str, pipeline: dict[str, Any]) -> AskResponse:
     # ------------------------------------------------------------------
     llm = pipeline["llm"]
     prompt_template = pipeline["prompt"]
-    context_text = "\n\n---\n\n".join(chunk.page_content for chunk in top_chunks)
+    context_text = "\n\n---\n\n".join(
+        f"[Source: {chunk.metadata.get('source', 'unknown')} | Section: {chunk.metadata.get('section', 'document')} | Title: {chunk.metadata.get('title', 'Untitled')} | Domain: {chunk.metadata.get('domain', 'unspecified')}]\n{chunk.page_content}"
+        for chunk in top_chunks
+    )
     prompt_messages = prompt_template.format_messages(
         context=context_text, question=question
     )

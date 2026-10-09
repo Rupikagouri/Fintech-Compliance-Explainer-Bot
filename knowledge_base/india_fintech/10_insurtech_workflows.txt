@@ -1,0 +1,39 @@
+DOCUMENT_ID: IN-FINTECH-10
+TITLE: Indian InsurTech: Policy Distribution, Premium Collection, and Claims Systems
+DOMAIN: InsurTech
+SUBDOMAIN: insurer/distributor workflows, policy admin, claims
+COUNTRY: India
+APPLICABILITY: Product/process overview; coverage is controlled by policy wording and current IRDAI rules
+LAST_VERIFIED: 2026-10-09; IRDAI 2024 policyholder regulations and grievance pages checked
+SOURCE_URLS: https://irdai.gov.in/web/guest/consolidated-gazette-notified-regulations | https://irdai.gov.in/grievance-cell-cad
+KEY_TERMS: insurer, InsurTech, intermediary, TPA, policy administration system, proposal, underwriting, premium, claim, repudiation, Bima Bharosa
+RELATED_DOCUMENTS: 00_ecosystem_and_regulator_map.txt, 06_fintech_api_architecture.txt, 12_regtech_kyc_aml.txt, 13_fraud_security_privacy.txt
+---
+
+INSURTECH ROLE BOUNDARIES
+InsurTech describes technology supporting insurance distribution, underwriting, policy service, claims, fraud controls or analytics; it is not one license class. Insurer bears the insurance contract and risk. Agent/broker/corporate agent/web aggregator or other permitted intermediary distributes under its applicable rules. Third-party administrator (TPA) may provide specified health claims/network services; it does not become the insurer or decide coverage outside delegated/contractual authority. Technology vendor supplies software under contract. Customer-facing branding should disclose who underwrites and services the policy.
+
+DIGITAL POLICY LIFECYCLE
+1. Product configuration: insurer controls approved product wording, benefits, exclusions, eligibility, price/rating inputs, disclosures, filed/approved material as applicable.
+2. Quote: channel collects limited risk facts; rating engine returns premium/terms or refers case. Estimate is not a policy.
+3. Proposal: customer supplies declarations, identity/contact and supporting records, consents and payment authorization. Preserve question text/version, responses and timestamp.
+4. Underwriting: insurer rules/manual reviewers assess risk, request evidence, accept/decline/modify terms or impose permitted conditions; record rule/model version and rationale.
+5. Issuance: premium transaction is confirmed and policy admin system creates policy number, schedule, wording, dates, insured persons/assets, beneficiaries, coverage, exclusions and premium receipt. Payment confirmation and policy contract creation are distinct states.
+6. Endorsement/renewal/cancellation: changes are versioned; effective date and premium adjustment are explicit; renewal reminders are not proof of renewal.
+
+CLAIMS WORKFLOW
+Intimation -> claim ID -> identity/policy validation -> coverage/event/cause checks -> document request -> survey/medical/repair assessment where relevant -> liability decision -> approval/payment or partial settlement/repudiation with reasons -> customer notification -> reserve/ledger entry -> closure and complaint pathway. TPA, hospital, garage, surveyor or repair partner may contribute evidence; insurer remains the decision owner for coverage under applicable rules. Cashless and reimbursement workflows have different payer legs.
+
+DATA AND MONEY FLOW
+Customer premium -> collection channel/PA/acquirer/bank -> insurer collection account and premium ledger, reconciled to policy schedule. Claim approved -> insurer liability/claim ledger -> payee bank account or permitted service provider -> settlement confirmation -> claim closed. A card payment “success” without issued policy, or claim status “approved” without bank payout, is an intermediate state. Store payment reference, policy/claim ID and settlement reference with role-based access.
+
+EXAMPLE
+An online motor quote estimates ₹8,400 premium. Customer submits proposal and pays. Payment API returns pending; app must not show “policy issued” until insurer policy system returns a contract/policy number or authoritative issue status. If payment is confirmed but issuance fails, route to insurer reconciliation/refund queue. Months later a claim for ₹35,000 repair enters claim assessment; insurer may approve a covered amount under policy terms, not simply use the amount submitted.
+
+FAILURES, SECURITY, CONTROLS
+Wrong vehicle/person details; duplicate proposal; premium debited but no policy; policy PDF has stale version; renewal webhook duplicated; claim files incomplete; identity theft; falsified documents; hospital/vendor mismatch; partial/late payout. Use immutable policy versioning, access logging, consent/purpose limits, malware scanning and secure document storage, dual control for payee changes, signed callbacks, payment reconciliation, and complaint traceability. Protect health, identity and financial data as sensitive personal information under applicable law; do not expose claim details in logs or support chat.
+
+REGULATORY / GRIEVANCE SOURCE
+IRDAI consolidated regulations include the 2024 Protection of Policyholders' Interests, Operations and Allied Matters Regulations: https://irdai.gov.in/web/guest/consolidated-gazette-notified-regulations
+IRDAI grievance cell describes insurer-first complaint handling and Bima Bharosa escalation: https://irdai.gov.in/grievance-cell-cad
+Check actual policy text, current IRDAI circulars, insurance intermediary role and complaint deadlines before applying to a live case. This file excludes generic insurance buying advice.

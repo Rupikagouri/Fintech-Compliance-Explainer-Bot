@@ -102,15 +102,25 @@ _SUPPORTED_TOPIC_PATTERNS: list[str] = [
     r"\binterchange\b",
     r"\bmdr\b",
     r"\bcorrespondent\s+bank\b",
-    r"\bwhat.*(happen(s)?\s*(after|when|if)?)\b",
+    r"\bupi\s*(lite|autopay|mandate)?\b", r"\b(imps|neft|rtgs|nach|bbps|aeps|fastag)\b",
+    r"\b(npci|pisp|psp|tpap|pa-cb|payment\s+aggregator|payment\s+processor|payment\s+orchestration)\b",
+    r"\b(core\s+banking|banking\s+api|bank\s+api|open\s+banking|bank\s+integration)\b",
+    r"\b(reconcil(iation|e)|settlement\s+file|payout|ledger|double.entry|idempotenc(y|e)|webhook|callback|api\b|rest\s+api|oauth|event\s+queue)\b",
+    r"\b(digital\s+lending|loan\s+origination|loan\s+management|lms\b|lsp\b|key\s+fact\s+statement|kfs\b|co.lending|repayment\s+mandate)\b",
+    r"\b(account\s+aggregator|financial\s+information\s+user|financial\s+information\s+provider|consent\s+artefact|aa\s+framework)\b",
+    r"\b(embedded\s+finance|insurtech|wealthtech|regtech|fintech\s+architecture|financial\s+software)\b",
+    r"\b(chargeback|dispute|refund|reversal|pending\s+payment|failed\s+payment|duplicate\s+payment|transaction\s+state|payment\s+status)\b",
+    r"\b(kyc|ckyc|v\s*kyc|video\s+kyc|aml|cdd|beneficial\s+owner|sanctions\s+screening|transaction\s+monitoring)\b",
+    r"\b(fraud\s+detection|account\s+takeover|upi\s+fraud|payment\s+fraud|device\s+binding|tokeni[sz]ation|3d\s*secure)\b",
+    r"\b(fema|rbi|npci|fiu.ind|irdai|sebi|pfrda|digital\s+lending\s+directions|payment\s+system\s+operator)\b",
+    r"\b(financial\s+inclusion|aadhaar.enabled|direct\s+benefit\s+transfer|dbt|e.kyc|aeps|account\s+linking)\b",
+    r"\b(card\s+issuer|card\s+acquirer|merchant\s+onboarding|merchant\s+discount|payment\s+gateway|payout\s+reconciliation)\b",
+    r"\bwhat.*happen(s)?\b.{0,80}\b(pay|payment|transaction|settlement|verification|kyc|aml|bank|merchant)\b",
     r"\bwhy.*(payment|transaction|money)\b",
-    r"\bhow.*(payment|transaction|settlement|compliance|kyc|aml|upi|neft|rtgs|imps)\b",
-    r"\bwhat\s+is\s+(a\s+)?(payment|transaction|settlement|compliance|kyc|aml|upi|neft|rtgs|imps|swift|verification|fraud|authoris|authenti|sanction|beneficiar|chargeback|clearing|interbank|fintech|wallet|bank|card|otp|pin|biometric)\b",
-    r"\bwhat\s+does\s+.{0,30}(payment|transaction|settlement|compliance|kyc|aml|upi|neft|rtgs|imps)\b",
-    r"\bwhat\s+are\s+.{0,30}(payment|transaction|settlement|compliance|kyc|aml|check|rule|requir)\b",
-    r"\bexplain\b",
-    r"\bdescribe\b",
-    r"\btell\s+me\s+about\b",
+    r"\bhow.*(payment|transaction|settlement|compliance|kyc|aml|upi|neft|rtgs|imps|fintech|lending|ledger|reconcil|account\s+aggregator|bank\s+api|fraud|insurtech|wealthtech)\b",
+    r"\bwhat\s+is\s+(a\s+)?(payment|transaction|settlement|compliance|kyc|aml|upi|neft|rtgs|imps|swift|verification|fraud|authoris|authenti|sanction|beneficiar|chargeback|clearing|interbank|fintech|wallet|bank|card|otp|pin|biometric|lending|ledger|reconciliation|account\s+aggregator|payment\s+gateway|embedded\s+finance|regtech|insurtech|wealthtech|lms|lsp|nach|bbps|aeps)\b",
+    r"\bwhat\s+does\s+.{0,30}(payment|transaction|settlement|compliance|kyc|aml|upi|neft|rtgs|imps|fintech|ledger|api|lending|reconcil)\b",
+    r"\bwhat\s+are\s+.{0,30}(payment|transaction|settlement|compliance|kyc|aml|check|rule|requir|fintech|lending|ledger|account\s+aggregator)\b",
 ]
 
 _SUPPORTED_PATTERNS_COMPILED = [
@@ -209,16 +219,17 @@ _OUT_OF_SCOPE_PATTERNS_COMPILED = [
 # ---------------------------------------------------------------------------
 
 UNSUPPORTED_TOPIC_RESPONSE = (
-    "I can only answer questions about digital payment processes, transaction flows, "
-    "compliance checks (KYC, AML, sanctions), verification, and settlement. "
+    "I can answer questions about Indian fintech products, infrastructure, software, "
+    "payment and lending workflows, banking integrations, Account Aggregators, "
+    "InsurTech, WealthTech operations, RegTech, security, and applicable compliance. "
     "Your question seems to be about something else. "
-    "Please try rephrasing or ask a different question about FinTech payments."
+    "Please ask about an Indian fintech system, workflow, or control."
 )
 
 PROMPT_INJECTION_RESPONSE = (
     "I noticed your message contains patterns that look like an attempt to change "
-    "my operating instructions. I can only answer questions about digital payment "
-    "processes and FinTech compliance. Please ask a genuine question and I'll do "
+    "my operating instructions. I can answer questions about Indian fintech systems "
+    "and workflows. Please ask a genuine question and I'll do "
     "my best to help."
 )
 

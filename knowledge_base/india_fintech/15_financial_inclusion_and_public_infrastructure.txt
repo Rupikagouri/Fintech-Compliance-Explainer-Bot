@@ -1,0 +1,32 @@
+DOCUMENT_ID: IN-FINTECH-15
+TITLE: Indian Financial Inclusion and Public Digital Financial Infrastructure
+DOMAIN: Public financial infrastructure
+SUBDOMAIN: Jan Dhan/DBT, Aadhaar-enabled services, CKYCR, AA, digital public rails
+COUNTRY: India
+APPLICABILITY: Public programs have distinct eligibility, consent, security and service rules
+LAST_VERIFIED: 2026-10-09; official product/regulator sources listed; scheme eligibility must be checked live
+SOURCE_URLS: https://www.npci.org.in/product/aeps | https://www.npci.org.in/what-we-do/nach/product-overview | https://uidai.gov.in/ | https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=10598
+KEY_TERMS: financial inclusion, PMJDY, DBT, AePS, Aadhaar authentication, e-KYC, CKYCR, Account Aggregator, ULI, BC
+RELATED_DOCUMENTS: 00_ecosystem_and_regulator_map.txt, 02_payment_rails.txt, 09_account_aggregator_and_embedded_finance.txt, 12_regtech_kyc_aml.txt, 13_fraud_security_privacy.txt
+---
+
+PUBLIC INFRASTRUCTURE IS A SET OF SERVICES, NOT ONE DATABASE
+India's digital financial infrastructure includes identity/authentication services, bank accounts, payment rails, consent frameworks, registries, service APIs and government benefit systems. Each has its own operator, legal mandate, participating entities, identifiers and complaint path. Interoperability does not imply unrestricted data sharing or a universal central financial account.
+
+BUSINESS CORRESPONDENT AND LAST-MILE FLOW
+A Business Correspondent (BC) or agent may provide permitted bank services at a field location using micro-ATM/device and bank connectivity. Agent receives customer request -> authenticates by approved method -> routes through acquiring bank/rail -> customer's bank validates -> cash or confirmation is exchanged -> receipt and agent/bank settlement are reconciled. Agent cash float, connectivity, biometric device health, receipt and cash book are operational controls. The agent is not automatically the account-holding bank.
+
+AADHAAR: DIFFERENT ACTIONS
+Aadhaar authentication verifies an Aadhaar-linked identity assertion using an allowed modality/service and consent/legal basis. Aadhaar e-KYC is an identity-data response under its governing rules. Bank KYC/C DD is a regulated entity's customer due diligence process. AePS transaction authorization is a payment/service decision. These must not be collapsed into “Aadhaar checked means payment approved.” Protect biometrics and use approved devices/security; provide alternate/exception handling where applicable rules require.
+
+DIRECT BENEFIT TRANSFER (DBT) EXAMPLE
+Government benefit system determines beneficiary eligibility and payment instruction -> sponsoring department/agency prepares credit instructions -> banking/NACH or another designated transfer route processes -> destination bank maps account/beneficiary identifiers and posts credit -> sponsor and bank reconcile success/reject/return -> citizen sees account statement or status portal. Aadhaar seeding/mapping can be relevant for certain schemes but is not a universal prerequisite to every bank transfer. Eligibility, seeding and correction procedures are scheme-specific.
+
+CKYCR AND CONSENT DATA FLOWS
+CKYCR provides centralized KYC-record storage/retrieval within applicable KYC rules; it is not a transaction switch and does not replace ongoing CDD. Account Aggregator enables purpose-specific consented financial-data transfer; it does not authenticate payments or transfer funds. See 09 and 12.
+
+ULI AND API-BASED CREDIT
+RBI's Unified Lending Interface (ULI) is a developing digital public infrastructure effort to connect lenders with data providers for more efficient credit journeys. It should not be described as an instant universal credit bureau or a public loan-approval guarantee. Participation, data sources, consent, API access and product scope evolve; consult current RBI materials before describing capabilities.
+
+FAILURES AND SAFEGUARDS
+Name/account mismatch; inactive or seeded-to-wrong-account case; unavailable agent/device; biometric failure; stale beneficiary mapping; program eligibility mismatch; returned payment; duplicate benefit instruction; inaccessible language/accessibility; agent fraud. Keep scheme-specific complaint reference, bank transaction ID, beneficiary identifier and date. Offer service alternatives and follow official program/bank grievance process. Never collect Aadhaar number/biometric in a chatbot unless a legally approved secure flow exists; this project must not.

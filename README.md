@@ -32,7 +32,7 @@ The project uses Retrieval-Augmented Generation (RAG) to combine document retrie
 
 ## Knowledge Base
 
-The RAG system indexes the UTF-8 `.txt` files in `data/`. The corpus is organized around practical payment workflows and customer questions, not general AI/ML definitions:
+The RAG system indexes UTF-8 `.txt` files recursively from both `data/` and `knowledge_base/india_fintech/`. Its scope is Indian fintech products, infrastructure, software, operational workflows, and compliance. It excludes general personal finance, investing tutorials, standalone stock-market education, and unrelated corporate finance. WealthTech coverage is limited to product/system workflows.
 
 - `upi_workflow.txt`: UPI push, QR and collect flows, statuses, security, and debited-but-not-credited cases.
 - `neft_rtgs_imps_workflow.txt`: participant steps, availability, limits, transfer tracking, and differences among bank transfer rails.
@@ -41,13 +41,15 @@ The RAG system indexes the UTF-8 `.txt` files in `data/`. The corpus is organize
 - `payment_failures_and_complaints.txt`: failure triage, rail-specific reversal timelines, and escalation steps.
 - `payment_roles_and_lifecycle.txt`: actors and how initiation, authentication, authorization, clearing, settlement, posting, and confirmation differ.
 
-Each document includes source notes linking to official RBI, NPCI, Visa, or government material. Rules and timelines are tied to the named rail and failure case; they should not be generalized to every payment. The bot has no access to a user's bank account or case status.
+The modular `knowledge_base/india_fintech/` collection adds banking/core integration, domestic payment rails, merchant/card processing, failures and recovery, settlement/reconciliation, APIs and software architecture, ledgers, digital lending, Account Aggregators, embedded finance, InsurTech, WealthTech operations, RegTech/KYC/AML, fraud/security, cross-border flows, public infrastructure, and data/observability. `MANIFEST.txt`, `GLOSSARY.txt`, `COVERAGE_MATRIX.txt`, and `SOURCE_REGISTER.txt` describe contents, terminology, coverage, and verification limits.
+
+The loader strips metadata headers from model text while preserving title, domain, document ID, and relative filename for retrieval and citations. The index is rebuilt in memory at startup; restart Streamlit to re-index edits. Regulatory facts are date-sensitive: check `SOURCE_REGISTER.txt` for references and verification gaps. The bot has no access to a user's bank account or case status.
 
 ## Project Structure
 
 - `app.py`: Streamlit chat UI.
 - `answer_pipeline.py`, `rag_pipeline.py`, `safety.py`: answer generation, document retrieval, and safety handling.
-- `data/`: sourced FinTech workflow knowledge base indexed by retrieval.
+- `data/` and `knowledge_base/india_fintech/`: UTF-8 FinTech documents indexed recursively by retrieval.
 - `templates/index.html` and `index.html`: project overview/launch pages; the chat application runs in Streamlit.
 - `requirements.txt`: Python dependencies.
 - `tests/`: project setup and retrieval checks.

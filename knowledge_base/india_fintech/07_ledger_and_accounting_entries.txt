@@ -1,0 +1,49 @@
+DOCUMENT_ID: IN-FINTECH-07
+TITLE: Financial Ledgers, Double Entry, Payment Accounting, and Reversals
+DOMAIN: FinTech operations and accounting systems
+SUBDOMAIN: double-entry ledger, journal events, subledgers, reconciliation
+COUNTRY: India
+APPLICABILITY: Illustrative accounting patterns; account mapping depends on legal entity and policy
+LAST_VERIFIED: 2026-10-09; examples are conceptual, not prescribed chart-of-account mappings
+SOURCE_URLS: https://www.mca.gov.in/ | https://www.icai.org/ | https://www.npci.org.in/transaction-settlement-lifecycle
+KEY_TERMS: double entry, debit, credit, journal, general ledger, subledger, receivable, payable, suspense, reversal, accrual, control account
+RELATED_DOCUMENTS: 01_banking_core_and_apis.txt, 03_merchant_and_card_processing.txt, 05_settlement_reconciliation.txt, 06_fintech_api_architecture.txt
+---
+
+WHY A FINTECH LEDGER EXISTS
+A ledger is a controlled record of financial claims and obligations, not just a running balance field in an app. A transaction system may keep an operational payment state while an accounting ledger records debits/credits. A general ledger (GL) summarizes accounts for financial reporting; a subledger stores transaction-level detail and reconciles to a GL control account. A bank's CBS ledger, a wallet issuer's stored-value subledger, a PA merchant payable ledger and a merchant's accounting ledger are distinct systems.
+
+DOUBLE-ENTRY BASICS
+Each journal has equal total debits and credits. “Debit” and “credit” mean left/right accounting entries; they do not inherently mean bad/good, increase/decrease independent of account type, or cash-in/cash-out. Assets and expenses commonly increase with debit; liabilities, equity and income commonly increase with credit. Individual institution account mapping and applicable accounting standards control.
+
+Example: merchant receives ₹1,000 sale via a card/PA, before fee and payout. Simplified merchant books when sale is recognized and collection is due:
+Dr PA/Acquirer Receivable ₹1,000
+Cr Sales Revenue ₹1,000
+When ₹25 fee is charged:
+Dr Payment Processing Fee Expense ₹25
+Cr PA/Acquirer Receivable ₹25
+When net ₹975 is paid to bank:
+Dr Bank ₹975
+Cr PA/Acquirer Receivable ₹975
+This is an illustrative merchant mapping; revenue recognition, tax, charge timing and contract terms may change entries.
+
+PAYMENT PROVIDER/WALLET LEDGER (ILLUSTRATIVE)
+Customer loads ₹500 into a stored-value wallet from a bank. The issuer might record a bank/settlement asset against customer stored-value liability when the load is confirmed. Customer spends ₹120 at merchant: customer wallet liability decreases by ₹120; merchant settlement payable or scheme clearing obligation increases by ₹120 (fees may be separate). Payout debits merchant payable and credits settlement bank. Reconcile the wallet balance liability to customer-level subledger sum and safeguarded/settlement asset under applicable rules. Exact chart depends on issuer type, legal structure and product.
+
+REVERSALS ARE NEW EVENTS
+Never silently delete or edit a posted transaction to make the balance match. Create a linked compensating entry with original transaction ID, reason, actor, timestamps and approval. If a card authorization hold is released before capture, the ledger treatment can be a release of reserved availability rather than a cash refund. If a completed transfer is returned, record return/reversal with its own reference and opposite economic effect. Refund is typically a new credit flow and can occur days after sale.
+
+ACCRUAL, CASH AND VALUE DATE
+Transaction event time, accounting posting time, settlement date/value date, statement date and customer-visible date can differ. Cash-basis records recognize on cash movement; accrual systems recognize receivable/payable/revenue/expense as earned or owed under accounting policy. FinTech data models should store original event date, effective date and posting date separately where relevant.
+
+CORE CONTROLS
+Every journal is balanced; account currency and minor-unit scale are validated; immutable event ID prevents double posting; financial event links to operation, rail reference and source; maker/checker controls cover manual adjustment; control totals tie subledger to GL; recon breaks age and escalate; period close locks or controlled adjustments; audit logs record changes; negative balance and limit checks run atomically. Do not use floating-point arithmetic for money.
+
+RECONCILIATION EXAMPLE
+Internal payment ledger: 100 merchant captures = ₹74,000. Provider clearing file: 99 captures = ₹73,200 plus one rejected ₹800 row. Bank payout: ₹72,600 after ₹600 fees. Correct procedure is not to book ₹74,000 as a single bank deposit. Match 99 successes, trace rejected row, reconcile ₹600 fee under contract, then post payout and leave unmatched ₹800 in identified exception/suspense until resolved.
+
+TERMS
+Journal entry: dated debit/credit posting set. Posting: commit journal to ledger. Subledger: detailed entries supporting GL balance. Control account: GL total reconciled to subledger. Suspense: temporary account for unresolved allocation. Accrual: recognition before cash movement. Provision: estimate for a present exposure under accounting/regulatory policy; it is not the same as writing off a receivable. Write-off: accounting removal/reduction of carrying value under policy; it does not automatically legally forgive debt. Reversal: linked compensating event.
+
+SOURCE LIMITATION
+MCA/ICAI publish statutory and professional accounting requirements, but a fintech product's exact chart, recognition policy and journal mapping depends on entity type, applicable Ind AS/Accounting Standards, agreements and auditor-approved policy. This file provides system-design examples, not a legally prescribed journal template.
