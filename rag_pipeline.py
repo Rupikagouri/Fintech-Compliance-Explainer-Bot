@@ -35,7 +35,7 @@ EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 RERANKER_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 
 # Gemini model name (Gemini 1.5 Flash is free-tier accessible)
-GEMINI_MODEL = "gemini-1.5-flash"
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
 
 # ---------------------------------------------------------------------------
 # Prompt template
