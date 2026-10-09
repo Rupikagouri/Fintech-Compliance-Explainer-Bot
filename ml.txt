@@ -1,1 +1,0 @@
-Machine Learning (ML) is a branch of artificial intelligence that allows systems to learn from data and improve their performance over time without being explicitly programmed. ML algorithms can be classified into supervised learning, unsupervised learning, and reinforcement learning. Common applications include recommendation systems, fraud detection, and predictive analytics.

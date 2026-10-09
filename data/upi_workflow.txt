@@ -1,0 +1,34 @@
+DOCUMENT: UPI PAYMENT WORKFLOW (INDIA)
+Scope: UPI person-to-person (P2P) and person-to-merchant (P2M) payments, normal and exception paths.
+Use this document to answer practical questions such as “What happens after I scan a QR?”, “Why is my UPI payment pending?”, and “What should I do if my account was debited?”
+
+PARTICIPANTS
+The payer is the person initiating payment. The payer's UPI app is provided by a bank or third-party application provider (often called a TPAP). The payer's account-holding bank authenticates the customer and debits the account. NPCI operates the UPI switch and scheme. The payee is a person or merchant; the payee's bank receives the credit instruction. For a merchant payment, a payment aggregator or merchant acquirer may also provide the merchant acceptance and settlement service. A UPI ID/VPA identifies a payment address; it is not the same thing as the underlying bank account number.
+
+NORMAL P2P PUSH FLOW
+1. The payer opens a UPI app and chooses a beneficiary using a UPI ID, saved contact, account details, or QR code. The app resolves or validates the payment address and displays the payee name returned by the payment system where available. The payer should check the displayed recipient and amount before confirming.
+2. The payer enters an amount and confirms. The payer authenticates the debit with the UPI PIN in the payer's bank's approved flow. The PIN authorizes a bank debit; it is not a payee password and must not be shared with a person claiming to send money.
+3. The app sends the payment request through its provider and the UPI network. The payer's bank validates the instruction, applicable account status, authentication, balance, and bank-side risk controls. The network routes the transaction to the payee's bank.
+4. The payer's bank posts the debit and the payee's bank posts the credit. The banks return status messages through the network and app. UPI is designed for immediate payments, but a user interface can show pending when a response is delayed or a participant is temporarily unavailable. A timeout is not proof that no debit occurred.
+5. The payer and payee receive app or bank notifications. Save the transaction reference/UTR and use the app's transaction details for support. A screenshot of a success animation is not a substitute for checking the bank statement when the status is uncertain.
+
+P2M QR / COLLECT FLOW
+A static or dynamic merchant QR identifies the merchant's payment address; the payer still confirms the amount and authorizes the payment. In a collect request, the payee requests a payment and the payer must review the request and approve it in their own app. Receiving money does not require telling anyone a UPI PIN or OTP. Do not approve an unexpected collect request as a way to “receive a refund”. Merchant acquiring, order confirmation, and bank credit are related but separate: an order may not update immediately even when the bank transaction has completed.
+
+HOW TO READ THE STATUS
+SUCCESS: confirm the debit in the payer's bank record and, for a recipient, the credit in the recipient's record. Merchant order systems may need separate reconciliation.
+PENDING / PROCESSING: the final response has not reached the app or the relevant bank status is unresolved. Do not repeatedly pay without first checking transaction history and account debit status.
+FAILED: the payment was declined or did not complete according to the returned status. Check whether a debit exists; if debited, retain the reference and follow the bank/app complaint workflow rather than assuming the label alone proves reversal.
+UNKNOWN / APP ERROR: the app could not establish a final result. Check the bank statement and transaction status after a short interval. Avoid sharing PIN, OTP, full card data, or screen-control access with support callers.
+
+DEBITED BUT RECIPIENT NOT CREDITED
+First open the original transaction and note date/time, amount, status, and UTR/reference. Check both payer and recipient bank records. Raise a complaint against that transaction with the payer's UPI app/provider or bank; the app's grievance path can route issues to the relevant participant. Do not make a second payment solely because the first app screen timed out. RBI's failed-transaction framework specifies an auto-reversal deadline for UPI fund transfers where the payer is debited but the beneficiary is not credited: by T+1 day, with ₹100 per day compensation for delay beyond the applicable deadline. For a merchant payment where debit occurred but merchant confirmation was not received, the framework gives a different T+5 day reversal deadline and ₹100/day delay compensation. T means transaction date. Confirm current applicability with the bank because rail, transaction type, and later regulatory updates matter.
+
+LIMITS AND SECURITY
+Limits can depend on NPCI scheme rules, transaction category, bank, customer risk controls, and app capability. Never infer an individual user's available limit from a generic explainer. UPI PIN is entered only in the payer's bank/app authorization screen. Never disclose it, an OTP, or remote access credentials. A bank may decline a payment for insufficient balance, incorrect PIN, account restrictions, limits, or risk checks; the app may show only a general decline message.
+
+SOURCE NOTES (official primary sources)
+NPCI UPI product page and FAQs: https://www.npci.org.in/what-we-do/upi/faqs
+NPCI UPI Product Booklet: https://www.npci.org.in/PDF/npci/upi/Product-Booklet.pdf
+RBI Harmonisation of Turn Around Time and customer compensation for failed transactions, 20 Sep 2019: https://www.rbi.org.in/commonman/English/Scripts/Notification.aspx?Id=3074
+RBI complaint escalation / Integrated Ombudsman Scheme information: https://cms.rbi.org.in/

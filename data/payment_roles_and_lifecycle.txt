@@ -1,0 +1,41 @@
+DOCUMENT: PAYMENT ROLES AND END-TO-END LIFECYCLE
+There is no single five-step payment workflow shared by every product. A UPI transfer, NEFT credit, RTGS transfer, and card purchase use different networks, participants, messages, and settlement rules. This document defines the stages in a way that helps answer “what happens after I tap Pay?” without implying that every payment follows every stage identically.
+
+COMMON ROLES
+Payer / cardholder: initiates payment and funds it.
+Payee / merchant: receives value or a payment promise; merchant order fulfilment is separate from bank payment processing.
+Payment service provider (PSP): provides a customer or merchant-facing payment service. The exact regulated role depends on the product and jurisdiction.
+Gateway: technical service that securely captures/routes payment instructions; a gateway may not hold customer funds.
+Payment aggregator: under the applicable Indian regulatory framework, an intermediary that facilitates acceptance of customer payments for merchants and may receive/pool and transfer funds, subject to its authorization and rules. Do not treat “gateway” and “aggregator” as interchangeable legal labels.
+Issuer / account-holding bank: maintains the payer's account or issued card, checks the instruction, and may approve/decline or debit it.
+Acquirer: merchant-side bank/provider that accepts card or other merchant transactions and receives/settles merchant funds under its arrangements.
+Network / switch / clearing system: routes messages and calculates or processes obligations. NPCI operates UPI and IMPS; RBI owns and operates NEFT and operates RTGS.
+
+COMMON STAGES — APPLICABILITY VARIES BY RAIL
+1. Initiation: customer selects recipient/merchant, amount, and payment method; app validates required fields.
+2. Authentication: the customer proves authority using the channel's approved method (for example a UPI PIN, card 3-D Secure challenge, biometric, or bank login). Authentication is not a guarantee of payment approval.
+3. Authorization / instruction validation: the payer's bank or issuer applies account status, credential, balance/credit, limits, and risk controls. For some bank transfer rails, “authorization” is not the card-network issuer-approval stage; a submitted transfer instruction is validated and accepted for processing.
+4. Routing: the provider/network delivers the instruction to the relevant bank or payment participant.
+5. Debit/credit posting and status: one or more participant ledgers update and return acknowledgements. The customer screen may lag, and “pending” can mean the response is unresolved.
+6. Clearing: where the rail requires it, participants exchange transaction details and determine obligations. Card payments commonly clear after authorization/capture. Real-time gross settlement settles RTGS transfers individually without waiting for batch netting.
+7. Settlement: financial obligations are discharged between participants. This is not always the same as the visible debit/credit time.
+8. Merchant payout / reconciliation: an acquirer or aggregator pays the merchant according to contract and schedule; merchant systems match payment, order, refund, and settlement records. This stage does not apply to a simple person-to-person bank transfer in the same manner.
+
+IMPORTANT DISTINCTIONS
+Authentication = who may initiate this action?
+Authorization = does issuer/account participant approve this instruction now?
+Clearing = what transaction details and obligations must participants exchange/confirm?
+Settlement = when are interparticipant obligations discharged?
+Posting = when does an account ledger show a debit/credit?
+Confirmation = what status is returned to an app, merchant, or user?
+These events can occur close together or be separated in time. A success notification, a bank ledger entry, card statement posting, and merchant payout are different evidence at different layers.
+
+HOW TO ANSWER PRACTICAL QUESTIONS
+If asked “is the money gone?”, ask which rail, transaction status, and whether the account has a posted debit or only a pending card hold. If asked “why is my merchant not paid?”, distinguish card authorization, interbank settlement, and contractual merchant payout. If asked “does compliance check every payment?”, explain that customer due diligence is generally tied to the account relationship and payment-time controls depend on the rail, participant, law, and risk; the app's generic status cannot reveal a bank's internal review reason.
+
+SOURCE NOTES (official primary sources)
+RBI NEFT FAQs: https://www.rbi.org.in/Scripts/FAQView.aspx?Id=60
+RBI RTGS FAQs: https://www.rbi.org.in/scripts/FS_FAQs.aspx?Id=65
+NPCI UPI FAQs: https://www.npci.org.in/what-we-do/upi/faqs
+NPCI IMPS: https://www.npci.org.in/product/imps
+RBI Payment Aggregators and Payment Gateways discussion paper: https://www.rbi.org.in/Scripts/PublicationReportDetails.aspx?ID=943&UrlPage=

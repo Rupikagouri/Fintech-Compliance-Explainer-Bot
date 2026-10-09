@@ -1,0 +1,28 @@
+DOCUMENT: NEFT, RTGS AND IMPS WORKFLOWS (INDIA)
+Purpose: Explain how domestic bank transfer rails differ, what a customer sees, and how to investigate a delayed or returned transfer. Timing below is based on RBI/NPCI source material; the sending bank's current terms and transaction status remain important.
+
+NEFT: BATCH-BASED TRANSFER
+NEFT is a nationwide centralized payment system owned and operated by RBI. Customers submit an instruction through a bank branch or digital channel, providing beneficiary name, account number, bank/branch identifier (IFSC), and amount. The remitter bank validates the instruction and submits it to NEFT. RBI processes NEFT in half-hourly batches; the system is available 24 hours a day, every day. After batch settlement, the beneficiary bank uses the account details to credit the beneficiary. RBI's FAQ says the beneficiary account should be credited, or the transaction returned, within two hours of the relevant batch settlement. This is not “instant” merely because a mobile app accepted the form.
+There is no RBI-set minimum or maximum NEFT amount, though a bank or channel may impose its own limits. Keep the UTR/reference. A typo in the account number can be consequential: verify the beneficiary details before submission and contact the remitting bank promptly if an error is suspected. Do not rely on beneficiary name alone as a guaranteed account-number validation.
+
+RTGS: REAL-TIME GROSS SETTLEMENT
+RTGS settles qualifying transfers individually in real time rather than waiting for netting in a batch. RBI's FAQ describes availability 24x7x365 and a minimum amount of ₹2 lakh; RBI does not set an upper amount cap, though banks may set channel limits. The customer gives beneficiary account details and IFSC; the sending bank validates and sends the instruction, RTGS settles it, and the receiving bank credits the beneficiary. RBI says beneficiary credit is expected within 30 minutes after the receiving bank gets the RTGS message. If the beneficiary cannot be credited, funds are to be returned to the originating bank within one hour of receipt at the payment interface or by the end of the RTGS business day, whichever is earlier. A UTR is a 22-character reference for tracking.
+“Real time” describes interbank settlement processing; it does not guarantee that every customer-facing screen or internal bank posting updates at the same instant. For a missing credit, ask the remitting bank to trace the UTR. The RBI FAQ advises first contacting the bank and then using the applicable RBI complaint route if unresolved.
+
+IMPS: IMMEDIATE PAYMENT SERVICE
+IMPS is NPCI's instant, 24x7 interbank funds transfer service, including holidays. Depending on bank/app support, the customer may address payment by account number plus IFSC or by a mobile-linked identifier. The sending bank authenticates and validates the instruction, NPCI routes it, and the receiving bank returns a result and posts credit. NPCI publishes a per-transaction limit of ₹5 lakh for normal IMPS channels, with exceptions for SMS/IVR; participating banks may impose lower limits or channel conditions. Check the current bank/app limit rather than assuming every route allows the maximum.
+
+COMPARISON FOR COMMON QUESTIONS
+“Which is fastest?” IMPS and RTGS are designed for immediate processing; NEFT is processed in half-hourly batches. Actual customer-visible timing can still depend on bank processing and exception handling.
+“Can RTGS send ₹50,000?” Not under RBI's ₹2 lakh minimum for RTGS. Consider another supported rail and check the bank's channel limits.
+“Is NEFT available on Sunday?” RBI NEFT is available 24x7 including holidays; the receiving bank still has to process and credit the beneficiary after the relevant settlement.
+“Does instant settlement mean a merchant gets paid instantly?” No. This document covers interbank transfer rails. Card merchant payout schedules, payment aggregator settlement, and order reconciliation are separate processes.
+
+TRACKING AND EXCEPTIONS
+Save the UTR/transaction reference and verify status with the remitting bank. “Accepted” by the app can mean the instruction was received, not that the beneficiary has been credited. For a returned transaction, ask for the return reason and confirm the reversal in the originating account. For a wrong-account concern, report it immediately to the remitting bank; do not attempt to resolve it by asking a stranger to send money back to a different account. If unresolved, use the bank's grievance process and the RBI complaint mechanism when eligible.
+
+SOURCE NOTES (official primary sources)
+RBI NEFT FAQs: https://www.rbi.org.in/Scripts/FAQView.aspx?Id=60
+RBI RTGS FAQs: https://www.rbi.org.in/scripts/FS_FAQs.aspx?Id=65
+NPCI IMPS product page: https://www.npci.org.in/product/imps
+RBI Complaint Management System: https://cms.rbi.org.in/

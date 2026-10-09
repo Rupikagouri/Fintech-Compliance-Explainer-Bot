@@ -936,7 +936,10 @@ def _render_hero() -> None:
 
 def _render_metrics(message_count: int) -> None:
     col1, col2, col3 = st.columns(3)
-    col1.metric("Knowledge files", "7", help="FinTech documents in the knowledge base")
+    from rag_pipeline import DATA_PATH
+
+    knowledge_file_count = len(list(DATA_PATH.glob("*.txt")))
+    col1.metric("Knowledge files", knowledge_file_count, help="FinTech workflow documents in the knowledge base")
     col2.metric("Questions asked", message_count, help="This session")
     col3.metric("LLM", "Gemini Flash", help="Google Gemini 1.5 Flash")
 

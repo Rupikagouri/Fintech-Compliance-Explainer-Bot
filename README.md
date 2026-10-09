@@ -30,14 +30,27 @@ The project uses Retrieval-Augmented Generation (RAG) to combine document retrie
 | FAISS | Similarity search and document retrieval |
 | Streamlit | User interface, if used in the application |
 
+## Knowledge Base
+
+The RAG system indexes the UTF-8 `.txt` files in `data/`. The corpus is organized around practical payment workflows and customer questions, not general AI/ML definitions:
+
+- `upi_workflow.txt`: UPI push, QR and collect flows, statuses, security, and debited-but-not-credited cases.
+- `neft_rtgs_imps_workflow.txt`: participant steps, availability, limits, transfer tracking, and differences among bank transfer rails.
+- `card_payment_lifecycle.txt`: card authentication, authorization, capture, clearing, settlement, merchant payout, refunds, and disputes.
+- `kyc_aml_and_transaction_controls.txt`: customer onboarding, ongoing due diligence, transaction controls, and what a generic review status can and cannot tell a user.
+- `payment_failures_and_complaints.txt`: failure triage, rail-specific reversal timelines, and escalation steps.
+- `payment_roles_and_lifecycle.txt`: actors and how initiation, authentication, authorization, clearing, settlement, posting, and confirmation differ.
+
+Each document includes source notes linking to official RBI, NPCI, Visa, or government material. Rules and timelines are tied to the named rail and failure case; they should not be generalized to every payment. The bot has no access to a user's bank account or case status.
+
 ## Project Structure
 
-- `rag_pipeline.py`: Implements document processing, retrieval, and response generation.
-- `requirements.txt`: Lists the project's Python dependencies.
-- `test_retrieval.py`: Contains retrieval-related tests.
-- `test_project_setup.py`: Contains project setup tests.
-- `dl.txt`, `genai.txt`, `india.txt`, `lr.txt`, `ml.txt`, `usa.txt`: Reference text files for the knowledge base.
-- `README.md`: Project overview and setup instructions.
+- `app.py`: Streamlit chat UI.
+- `answer_pipeline.py`, `rag_pipeline.py`, `safety.py`: answer generation, document retrieval, and safety handling.
+- `data/`: sourced FinTech workflow knowledge base indexed by retrieval.
+- `templates/index.html` and `index.html`: project overview/launch pages; the chat application runs in Streamlit.
+- `requirements.txt`: Python dependencies.
+- `tests/`: project setup and retrieval checks.
 
 ## Setup and Installation
 

@@ -1,0 +1,34 @@
+DOCUMENT: CARD PAYMENT LIFECYCLE — AUTHENTICATION TO MERCHANT PAYOUT
+This document explains a typical online card purchase. The exact participants and sequence vary by card network, issuer, acquirer, merchant, payment gateway/processor, region, and transaction type.
+
+PARTICIPANTS
+Cardholder: customer presenting the card or token.
+Merchant: seller accepting payment.
+Payment gateway/processor: securely captures and routes payment data for the merchant; a gateway may provide technical connectivity and need not itself hold or settle funds.
+Acquirer: merchant-side financial institution or acquiring provider that submits transactions into the card network and receives settlement for its merchant customers.
+Card network: routes authorization and clearing messages under network rules.
+Issuer: bank or institution that issued the card and decides whether to approve an authorization.
+
+ONLINE PURCHASE: TYPICAL SEQUENCE
+1. Checkout: the merchant creates an order and asks its gateway/processor to initiate a card payment. Card data may be tokenized; the merchant should not expose sensitive authentication data in ordinary logs.
+2. Authentication: where required, 3-D Secure or another process helps verify that the person initiating the transaction is the cardholder. Authentication and authorization answer different questions. Authentication evidence does not guarantee approval or prevent every fraud.
+3. Authorization: the acquirer routes an authorization request through the network to the issuer. The issuer applies available-balance/credit, card status, security, and risk controls, then returns approve or decline. Approval commonly places an authorization hold or reserves available credit; it is not the same as final settlement or merchant payout.
+4. Capture: the merchant submits a capture for an approved transaction, often after fulfilment or shipment. Some flows authorize and capture together; others capture later or partially. An uncaptured authorization can expire or be reversed under applicable bank/network rules.
+5. Clearing: transaction details are exchanged and reconciled between acquirer/network/issuer so obligations can be calculated. The final clearing amount can differ from the original authorization in supported cases such as tips, partial capture, or currency conversion.
+6. Settlement: funds and network obligations are settled between financial institutions. This interbank step is distinct from the merchant's payout schedule. The acquirer or payment service provider credits the merchant according to its contract, settlement cycle, reserves, and risk controls.
+7. Reconciliation: the merchant matches order, authorization, capture, refund, chargeback, and payout records. A bank “pending” entry, a merchant order status, and an acquirer payout report may update at different times.
+
+CUSTOMER QUESTIONS
+“The card is charged but the order failed.” Check whether the bank entry is pending authorization or posted; capture may not have happened. Contact the merchant with order/payment reference, and the issuer if a posted debit remains unexplained. A displayed hold can disappear without a separate refund transaction, depending on issuer handling.
+“The merchant says paid but my app shows pending.” The merchant may have an authorization response while the issuer app has not refreshed. Ask for payment reference and confirm with issuer/acquirer before paying again.
+“Why is the merchant not paid when my card transaction succeeded?” Cardholder authorization and merchant settlement/payout are different stages. Merchant payouts may be scheduled or held under acquiring terms, risk review, refunds, or disputes.
+“How does a refund work?” The merchant/acquirer submits a credit/refund referencing the original transaction. The issuer posts it to the card account according to its processing and statement cycle. A merchant's refund confirmation is not necessarily an immediate statement credit.
+“What is a chargeback?” It is a formal card-network dispute process initiated through the issuer, with reason codes, evidence, deadlines, and responses. First contact the merchant for ordinary order issues; contact the issuer promptly when the transaction is unauthorized or the merchant remedy fails. The applicable network and local protections govern deadlines.
+
+SECURITY
+Do not send full card number, CVV, OTP, or bank login details to the bot or to a person claiming to troubleshoot a payment. Use the issuer's official app/number for suspected unauthorized card activity. Never treat successful 3-D Secure as proof that a transaction is legitimate in every respect.
+
+SOURCE NOTES (official primary sources)
+Visa explanation of 3-D Secure and authentication: https://corporate.visa.com/en/solutions/visa-protect/insights/3d-secure.html
+Visa Developer glossary (authorization, clearing and related terms): https://developer.visa.com/pages/glossary
+RBI guidance on Payment Aggregators and Payment Gateways: https://www.rbi.org.in/Scripts/PublicationReportDetails.aspx?ID=943&UrlPage=

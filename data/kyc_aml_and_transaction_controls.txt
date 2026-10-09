@@ -1,0 +1,31 @@
+DOCUMENT: CUSTOMER ONBOARDING, KYC, AML MONITORING AND PAYMENT CONTROLS (INDIA CONTEXT)
+Use for questions like “Does every UPI payment go through KYC?”, “Why did my account need re-verification?”, and “What does an AML review mean?” This is a plain-language overview, not a determination about a specific institution or account.
+
+KEEP THE CONTROLS DISTINCT
+Customer due diligence (CDD/KYC) identifies and verifies a customer when establishing a regulated relationship and maintains information over time. Authentication checks that the person initiating a particular action can use an approved credential/device. Transaction authorization decides whether a specific instruction may proceed. Fraud controls look for patterns associated with deception or account takeover. AML monitoring looks for activity that may need review under a regulated entity's risk-based controls. Sanctions screening checks applicable lists and rules. These checks can overlap, but they are not one universal “compliance step” that every payment visibly traverses in the same way.
+
+ACCOUNT ONBOARDING WORKFLOW
+1. An applicant submits identity and contact information through a regulated bank or other regulated entity's onboarding channel.
+2. The entity performs customer identification and verification using a legally permitted method, such as an officially valid document, digital KYC, video-based customer identification, or other allowed process. The specific method depends on the entity, customer type, product, risk, and current law.
+3. The entity establishes the customer's profile, purpose/nature of relationship, and risk rating. Where required, it identifies beneficial owners for legal entities and conducts applicable PEP/sanctions checks.
+4. The entity records and retains required evidence and may use the Central KYC Records Registry (CKYCR) processes where applicable. CKYCR reuse does not remove the regulated entity's duty to conduct due diligence and keep information current.
+5. Ongoing due diligence updates records and monitors activity relative to the known customer profile. RBI's KYC Direction sets risk-based periodic update intervals; the direction states at least once every 2 years for high-risk customers, 8 years for medium-risk, and 10 years for low-risk customers, subject to amendments and applicable category-specific requirements. Institutions can request updates when required by law or their risk process.
+
+PAYMENT-TIME FLOW
+A bank may apply authentication, balance/account eligibility, limits, fraud controls, and risk checks while processing a payment. Monitoring can be automated and may also lead to a later review or information request. A normal customer payment does not mean the customer is re-onboarded or manually screened from scratch every time. Which controls apply depends on rail, product, participants, jurisdiction, the institution's obligations, and the transaction's risk signals.
+
+WHY A PAYMENT OR ACCOUNT MAY BE REVIEWED
+Possible causes include unusual transaction amount or frequency compared with expected activity, a new device/location, beneficiary or account risk, mismatched customer information, legal restrictions, suspected fraud, a bank limit, or a technical failure. A generic “under review” or “declined” message does not identify which cause occurred. The bot cannot see bank alerts or disclose a hidden monitoring rule. The customer should contact the bank through its official app/number and answer only secure, relevant requests. A bank should not ask the customer to disclose a UPI PIN, card CVV, OTP, or remote-access code to clear a review.
+
+AML AND REPORTING
+Regulated entities must maintain risk-based controls, monitor transactions, keep records, and report specified information to the competent authority as required by law. Suspicious transaction reporting is not a public accusation or proof that a customer committed a crime; reporting and investigation are handled through legal processes. Avoid claims that a single universal amount automatically triggers AML review: thresholds and reporting duties depend on the rule, transaction type, entity, and facts, and internal controls may be risk-based rather than publicly disclosed.
+
+CUSTOMER FAQ
+“I completed KYC; why was I asked again?” Information may be outdated, incomplete, inconsistent, or due for periodic update; a new product or risk event may also require refresh. Verify the request with the institution through an official channel.
+“Will KYC stop a payment?” KYC is generally an account/customer due-diligence process, while a specific payment decision can involve separate account, authentication, limit, fraud, legal, and network checks. An account restriction can affect payment access, but the exact reason must come from the institution.
+“Can the bot tell me which rule blocked my transfer?” No. It has no access to bank systems or the customer's case. It can explain the ordinary workflow and help prepare the transaction reference and questions for official support.
+
+SOURCE NOTES (official primary sources)
+RBI Master Direction – Know Your Customer (KYC) Direction, 2016, as amended: https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=11566
+RBI amendment notification, 12 Jun 2025: https://www.rbi.org.in/scripts/NotificationUser.aspx/searchnew/searchnew/NotificationUser.aspx?Id=12866
+FIU-IND: https://fiuindia.gov.in/

@@ -378,7 +378,7 @@
         </div>
 
         <div class="metrics" aria-label="Part 1 at a glance">
-          <div class="metric"><div class="metric-icon">▤</div><div><strong>6</strong><small>knowledge files added</small></div></div>
+          <div class="metric"><div class="metric-icon">▤</div><div><strong>6</strong><small>payment workflow guides</small></div></div>
           <div class="metric"><div class="metric-icon">⌘</div><div><strong>4</strong><small>retrieval functions</small></div></div>
           <div class="metric"><div class="metric-icon">✓</div><div><strong>14</strong><small>checks written · not run yet</small></div></div>
         </div>
@@ -389,7 +389,7 @@
         <div class="check-layout">
           <div class="card check-card" id="checkList">
             <label class="check-row"><input type="checkbox" checked data-key="files"><span class="check-copy">Project setup files added<small>Dependencies and Git ignore rules are in place.</small></span><span class="status">DONE</span></label>
-            <label class="check-row"><input type="checkbox" checked data-key="knowledge"><span class="check-copy">Knowledge files copied<small>Six AI and ML text files are in the data folder.</small></span><span class="status">DONE</span></label>
+            <label class="check-row"><input type="checkbox" checked data-key="knowledge"><span class="check-copy">FinTech knowledge base curated<small>Six workflow guides cover UPI, bank transfers, cards, KYC/AML, and failures.</small></span><span class="status">DONE</span></label>
             <label class="check-row"><input type="checkbox" checked data-key="functions"><span class="check-copy">Retrieval functions added<small>Load, split, embed, and retrieve text documents.</small></span><span class="status">DONE</span></label>
             <label class="check-row"><input type="checkbox" checked data-key="tests"><span class="check-copy">14 tests written<small>Six setup checks and eight retrieval checks.</small></span><span class="status">WRITTEN</span></label>
             <label class="check-row"><input type="checkbox" data-key="run"><span class="check-copy">Install packages and run checks<small>This has not been verified in the project environment yet.</small></span><span class="status pending">TO DO</span></label>
@@ -407,7 +407,7 @@
           <div class="section-head"><div><h2>What’s in the folder</h2><p>Select a file to see what it does.</p></div></div>
           <div class="file-list">
             <button class="file-button selected" data-file="pipeline"><span>⌘</span><strong>rag_pipeline.py</strong><small>CORE</small></button>
-            <button class="file-button" data-file="data"><span>▤</span><strong>data/</strong><small>6 TEXT FILES</small></button>
+            <button class="file-button" data-file="data"><span>▤</span><strong>data/</strong><small>6 WORKFLOW GUIDES</small></button>
             <button class="file-button" data-file="deps"><span>⇩</span><strong>requirements.txt</strong><small>PACKAGES</small></button>
             <button class="file-button" data-file="tests"><span>✓</span><strong>tests/</strong><small>14 CHECKS</small></button>
             <button class="file-button" data-file="ignore"><span>⊘</span><strong>.gitignore</strong><small>PROJECT HYGIENE</small></button>
@@ -546,7 +546,7 @@
     });
     const descriptions = {
       pipeline: 'Contains the functions that read text files, split them into chunks, build a FAISS index, and create the retriever.',
-      data: 'Six source documents about generative AI, India, the USA, linear regression, deep learning, and machine learning.',
+      data: 'Six practical guides for UPI, NEFT/RTGS/IMPS, card payments, KYC/AML controls, payment failures, and end-to-end payment roles.',
       deps: 'Lists the exact Python package versions needed by this project. Install them with pip before running the tests.',
       tests: 'Contains setup checks and tests for loading documents, splitting chunks, and configuring the retriever.',
       ignore: 'Keeps virtual environments, secrets files, and Python temporary files out of Git.'

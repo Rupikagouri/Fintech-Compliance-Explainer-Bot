@@ -1,0 +1,32 @@
+DOCUMENT: PAYMENT FAILURE, DELAY, REVERSAL AND COMPLAINT WORKFLOW
+This guide helps distinguish an app timeout, a failed debit, a pending authorization, a bank transfer return, and a merchant-order problem. The applicable turnaround deadline depends on the payment rail and failure type; do not promise a single refund period for every payment.
+
+FIRST TRIAGE: RECORD FACTS
+For the original transaction, capture the date/time, amount, rail (UPI, IMPS, NEFT, RTGS, card), app/bank, displayed status, transaction ID/UTR/RRN, and whether the payer account shows a debit or the card entry is pending/posted. Do not post account numbers, card data, PIN, OTP, or statements into a public chat. Check whether a reversal is already present and whether the beneficiary/merchant has a matching credit.
+
+INTERPRET THE SCREEN
+APP ACCEPTED: the provider received the instruction; it does not necessarily prove final interbank completion.
+PENDING: a final result is not yet known to the app or bank. Check again in transaction history and verify account entries. Do not make another payment until you know whether the first one completed, especially for the same merchant/order.
+FAILED: the system returned a failure status, but verify whether a debit or card hold exists. If money was debited, use the failed-transaction workflow.
+REVERSED/REFUNDED: confirm the credit in the original funding account. A card authorization hold disappearing may appear as the pending entry vanishing rather than a separately labelled refund.
+MERCHANT ORDER FAILED: payment processing and merchant order fulfilment are separate systems. Preserve both order and payment references and contact the merchant and payment provider as appropriate.
+
+RAIL-SPECIFIC RBI FAILED TRANSACTION DEADLINES
+UPI fund transfer: when the payer is debited but the beneficiary is not credited, RBI's 2019 framework sets auto-reversal by T+1 day and compensation of ₹100 per day beyond that applicable deadline.
+UPI merchant payment: when payer debit occurs but merchant confirmation is not received, the framework sets auto-reversal within T+5 days and ₹100/day beyond the applicable deadline.
+IMPS: when the remitter is debited but beneficiary is not credited, the framework sets auto-reversal by T+1 day and ₹100/day beyond the deadline.
+These entries summarize the RBI framework and can be affected by later directions or transaction-specific facts. T is the transaction date. If the deadline has passed, include the reference and request reversal/compensation review from the bank; do not infer eligibility solely from a generic app message.
+NEFT and RTGS have their own credit/return expectations described in the rail workflow documents. Card authorization reversals, refunds, and disputes follow issuer/acquirer/network procedures and are not covered by the UPI/IMPS table above.
+
+ESCALATION STEPS
+1. Raise a complaint against the transaction in the app or with the bank that holds the debited account. Request a ticket/complaint number and expected resolution date.
+2. If it is UPI, use the app's grievance flow first; escalation may proceed from the app/provider to the account-holding bank, NPCI, and applicable regulatory channels according to the scheme grievance process.
+3. If the matter concerns a merchant order, contact the merchant with the order reference and payment reference. If card payment remains unauthorized or unresolved, contact the issuer using the number/app printed on official bank materials.
+4. If the regulated entity does not resolve the complaint satisfactorily or within the applicable period, use RBI's Complaint Management System / Integrated Ombudsman process when eligible. Keep the original complaint number and correspondence.
+5. For suspected fraud, immediately contact the bank/payment provider through an official channel and report promptly to India's cybercrime helpline/portal. Never share a PIN/OTP with anyone who calls back.
+
+SOURCE NOTES (official primary sources)
+RBI failed transaction TAT and compensation circular: https://www.rbi.org.in/commonman/English/Scripts/Notification.aspx?Id=3074
+NPCI UPI FAQs: https://www.npci.org.in/what-we-do/upi/faqs
+RBI Complaint Management System: https://cms.rbi.org.in/
+National Cyber Crime Reporting Portal: https://cybercrime.gov.in/
