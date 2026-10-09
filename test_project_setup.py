@@ -1,6 +1,7 @@
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+# This file lives at the project root, so parents[0] IS the project root.
+ROOT = Path(__file__).resolve().parent
 
 
 def test_data_directory_exists():

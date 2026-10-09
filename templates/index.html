@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinTech Compliance Explainer Bot</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 2rem;
+      text-align: center;
+    }
+    h1 { font-size: 2rem; color: #38bdf8; margin-bottom: 0.5rem; }
+    p  { color: #94a3b8; max-width: 600px; line-height: 1.6; }
+    .badge {
+      display: inline-block;
+      background: #1e40af;
+      color: #bfdbfe;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      margin: 0.25rem;
+    }
+    .launch {
+      margin-top: 2rem;
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .launch:hover { background: #1d4ed8; }
+    canvas { display: block; margin: 2rem auto; }
+  </style>
+</head>
+<body>
+  <h1>&#x1F4B8; FinTech Compliance &amp; Transaction Flow Explainer Bot</h1>
+  <p>
+    Ask plain-English questions about digital payments, compliance checks,
+    KYC, AML, settlement, and more. Built with Retrieval-Augmented Generation
+    and Google Gemini Flash.
+  </p>
+
+  <div>
+    <span class="badge">&#x1F9E0; Gemini Flash</span>
+    <span class="badge">&#x1F50D; RAG</span>
+    <span class="badge">&#x1F6E1;&#xFE0F; Safety Guardrails</span>
+    <span class="badge">&#x1F4B3; FinTech Domain</span>
+  </div>
+
+  <!-- Progress checklist -->
+  <ul id="checklist" style="text-align:left;max-width:500px;margin:1.5rem auto 0;">
+    <li><input type="checkbox" id="c1" onchange="save()"> <label for="c1">Knowledge base loaded</label></li>
+    <li><input type="checkbox" id="c2" onchange="save()"> <label for="c2">Safety guards active</label></li>
+    <li><input type="checkbox" id="c3" onchange="save()"> <label for="c3">Gemini API key configured</label></li>
+    <li><input type="checkbox" id="c4" onchange="save()"> <label for="c4">Tests passing</label></li>
+    <li><input type="checkbox" id="c5" onchange="save()"> <label for="c5">Streamlit app launched</label></li>
+  </ul>
+
+  <canvas id="coin-canvas" width="400" height="100" aria-label="Animated coin illustration"></canvas>
+
+  <a class="launch" href="http://localhost:8501" target="_blank">Launch Streamlit App &#x2192;</a>
+
+  <script>
+    // ---------------------------------------------------------------
+    // Persist checklist selections in localStorage
+    // ---------------------------------------------------------------
+    const IDS = ["c1","c2","c3","c4","c5"];
+    function save() {
+      IDS.forEach(id => {
+        localStorage.setItem(id, document.getElementById(id).checked);
+      });
+    }
+    IDS.forEach(id => {
+      const saved = localStorage.getItem(id);
+      if (saved === "true") document.getElementById(id).checked = true;
+    });
+
+    // ---------------------------------------------------------------
+    // Coin burst animation (respects prefers-reduced-motion)
+    // ---------------------------------------------------------------
+    const canvas = document.getElementById("coin-canvas");
+    const ctx = canvas.getContext("2d");
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const coins = Array.from({length: 8}, (_, i) => ({
+      x: 50 + i * 45,
+      y: 50,
+      vy: 0,
+      phase: i * 0.4
+    }));
+
+    function drawCoin(x, y, r) {
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fillStyle = "#fbbf24";
+      ctx.fill();
+      ctx.strokeStyle = "#d97706";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.fillStyle = "#92400e";
+      ctx.font = `${r}px serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("₹", x, y);
+    }
+
+    function animate(t) {
+      if (prefersReduced) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      coins.forEach(c => {
+        const y = 50 + Math.sin(t / 800 + c.phase) * 20;
+        drawCoin(c.x, y, 16);
+      });
+      requestAnimationFrame(animate);
+    }
+
+    if (!prefersReduced) requestAnimationFrame(animate);
+    else coins.forEach(c => drawCoin(c.x, 50, 16));
+
+    // Coin burst on click / Enter / Space
+    function burst() {
+      let count = 0;
+      const id = setInterval(() => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        coins.forEach((c, i) => {
+          const y = 50 - count * 3 + Math.sin(i) * count;
+          ctx.globalAlpha = Math.max(0, 1 - count / 20);
+          drawCoin(c.x, y, 16);
+        });
+        ctx.globalAlpha = 1;
+        if (++count > 20) clearInterval(id);
+      }, 30);
+    }
+    canvas.addEventListener("click", burst);
+    canvas.setAttribute("tabindex", "0");
+    canvas.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") burst();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+KYC and AML: Identity Verification and Money Laundering Prevention
+
+KYC – KNOW YOUR CUSTOMER
+
+WHAT IS KYC?
+KYC (Know Your Customer) is the mandatory process by which a bank or financial institution verifies the identity of its customers before allowing them to open an account or conduct significant transactions. KYC is a legal requirement, not optional.
+
+The purpose of KYC is to:
+- Prevent fraud and identity theft.
+- Prevent financial institutions from being used for money laundering or terrorist financing.
+- Ensure that the bank knows who it is dealing with.
+
+WHAT INFORMATION IS COLLECTED FOR KYC?
+For individuals:
+- Full legal name.
+- Date of birth.
+- Address (current and permanent).
+- Nationality.
+- Occupation and source of income.
+- Government-issued photo ID (in India: Aadhaar card, PAN card, passport, voter ID, driver's licence).
+- Photograph.
+
+For businesses (Business KYC / KYCB):
+- Certificate of incorporation.
+- PAN of the company.
+- Memorandum and Articles of Association.
+- List of beneficial owners (anyone owning more than 25% of the company).
+- Details of directors and authorised signatories.
+- Proof of registered address.
+
+TYPES OF KYC IN INDIA
+1. In-Person Verification (IPV): customer visits a bank branch with original documents.
+2. Video KYC (V-CIP): customer is verified via a video call by a bank representative.
+3. Aadhaar-based eKYC: uses Aadhaar biometrics or OTP to verify identity against the UIDAI database digitally. The fastest and most common digital KYC method.
+4. Offline Aadhaar KYC: customer shares a digitally signed XML file downloaded from UIDAI.
+5. DigiLocker-based KYC: customer shares documents stored in their DigiLocker.
+
+CIP – CUSTOMER IDENTIFICATION PROGRAM
+A CIP is a formal written programme a bank maintains describing how it will identify and verify customers. Required by regulators.
+
+RISK-BASED KYC
+Not all customers are the same risk. Banks apply:
+- Simplified Due Diligence (SDD): for low-risk customers with small accounts.
+- Standard Due Diligence: for most customers.
+- Enhanced Due Diligence (EDD): for high-risk customers such as PEPs (Politically Exposed Persons), customers from high-risk countries, and customers with unusually complex transaction patterns.
+
+KYC REFRESH
+KYC information must be updated periodically:
+- High-risk customers: every two years.
+- Medium-risk: every eight years.
+- Low-risk: every ten years.
+Banks may ask existing customers to submit fresh KYC documents even if the account is old.
+
+WHAT HAPPENS IF KYC IS INCOMPLETE?
+- Accounts may be frozen or restricted.
+- Transactions above certain limits may be blocked.
+- The RBI requires banks to close non-KYC-compliant accounts in some circumstances.
+
+---
+
+AML – ANTI-MONEY LAUNDERING
+
+THE THREE STAGES OF MONEY LAUNDERING
+1. Placement: introducing illegal cash into the financial system (e.g., depositing it in small amounts across multiple accounts).
+2. Layering: moving the money through multiple transactions to obscure the trail (e.g., transfers between accounts, converting to crypto, international wires).
+3. Integration: the money re-enters the economy appearing legitimate (e.g., purchasing property, investing in a business).
+
+AML CONTROLS IN PAYMENT SYSTEMS
+- Transaction monitoring: automated systems analyse each transaction and transaction history for red flags.
+- Threshold reporting: transactions above regulatory thresholds are reported automatically (e.g., cash transactions above ₹10 lakh in India).
+- Watchlist screening: names are checked against AML, sanctions, and PEP databases.
+- Suspicious Activity Reports (SARs) / Suspicious Transaction Reports (STRs): filed by the bank when a transaction or customer behaviour is deemed suspicious. The customer is NOT told that a SAR/STR has been filed (called the "tipping off" prohibition).
+- Record retention: banks must keep KYC and transaction records for a minimum number of years (5 years in India under PMLA).
+
+COMMON RED FLAGS FOR AML
+- Structuring: making multiple transactions just below reporting thresholds.
+- Round-tripping: money going out and coming back to the same entity via a different route.
+- Rapid movement: funds transferred quickly through multiple accounts without an obvious business reason.
+- Cash-intensive businesses reporting unusually high revenues.
+- Geographic red flags: transactions involving high-risk jurisdictions.
+- Mismatched purpose: stated purpose of payment does not match transaction pattern.
+
+FATF AND GLOBAL AML STANDARDS
+The Financial Action Task Force (FATF) is an intergovernmental body that sets the global standards for AML and CFT. Countries are evaluated against FATF standards; countries on the "grey list" or "black list" face increased scrutiny on transactions involving their institutions.
+
+INDIA-SPECIFIC AML FRAMEWORK
+- PMLA (Prevention of Money Laundering Act) 2002: the primary AML legislation.
+- FIU-IND (Financial Intelligence Unit – India): the central agency receiving, analysing, and disseminating STRs and CTRs.
+- Regulated entities (banks, NBFCs, payment aggregators) must register with FIU-IND and file reports.
+- The RBI issues Master Directions on KYC, which are updated periodically.

@@ -1,0 +1,71 @@
+Digital Payment Transaction Flow: From Initiation to Settlement
+
+OVERVIEW
+A digital payment goes through five main stages before the money actually moves between accounts. Understanding each stage helps you know what is happening when your screen says "Verifying..." or "Processing...".
+
+THE FIVE STAGES
+
+1. PAYMENT INITIATION
+The user triggers the payment. This can happen by:
+- Tapping "Pay" in a UPI app (like PhonePe, Google Pay, or Paytm).
+- Entering card details on an e-commerce website.
+- Scanning a QR code at a shop.
+- Setting up an automatic bank transfer.
+
+At this point, no money has moved. The payment request is simply created.
+
+2. VERIFICATION
+The system confirms the transaction is legitimate. See also: verification.txt for full detail.
+Key checks:
+- Identity authentication (OTP, PIN, biometric).
+- Account status (active, not blocked or frozen).
+- Sufficient funds or credit limit.
+- Fraud signals (unusual location, device, or amount).
+If verification fails, the transaction is declined immediately and no money moves.
+
+3. COMPLIANCE CHECKS
+Automated compliance engines run the transaction against regulatory rules. This happens in real time, often in milliseconds. Checks include:
+- AML (Anti-Money Laundering) screening: does the payment look like it could be laundering money?
+- Sanctions screening: is either party on a government sanctions list?
+- Transaction limits: does the amount exceed allowed daily or per-transaction limits?
+- Source of funds flags: is the origin of the money consistent with the customer's profile?
+If a compliance check flags the transaction, it may be blocked, held for review, or reported to a regulator.
+
+4. PROCESSING
+The payment instruction is routed between financial institutions.
+- For card payments: the card network (Visa, Mastercard, RuPay) routes the message between the merchant's bank (acquirer) and the cardholder's bank (issuer).
+- For UPI payments: NPCI routes the message between the sender's bank and the receiver's bank.
+- For NEFT/RTGS: the Reserve Bank of India's systems handle the interbank transfer.
+During processing, funds are typically "reserved" or "held" in the sender's account, not yet transferred.
+
+5. SETTLEMENT
+The actual movement of money between banks. This can happen at different speeds:
+- Real-Time Gross Settlement (RTGS): individual high-value transfers settled immediately.
+- Net settlement: banks batch up many transactions and settle the net difference at fixed times (e.g., NEFT in India settles in half-hourly batches).
+- Card payments: typically settle one to three business days after the transaction.
+- UPI: the underlying bank settlement typically completes within the same day.
+After settlement, the funds are irrevocably transferred and the transaction is complete.
+
+WHY DOES IT SOMETIMES TAKE TIME?
+- Compliance checks may place a transaction "on hold" for manual review.
+- Net settlement systems only run at certain intervals.
+- Weekends and bank holidays can delay interbank settlement.
+- International payments involve additional correspondent banking steps and may take one to five business days.
+
+TRANSACTION STATUS MESSAGES
+- "Verifying" – authentication and fraud checks are running.
+- "Compliance check in progress" – AML/sanctions screening is running.
+- "Processing" – the payment instruction is being routed.
+- "Pending" – initiated but settlement not yet complete.
+- "Settled" or "Successful" – money has moved, transaction complete.
+- "Declined" – a check failed; no money moved.
+- "On hold" – a compliance flag has paused the transaction; may need manual review.
+
+PAYMENT RAILS
+Different payment systems (called "rails") handle different types of transactions:
+- UPI (Unified Payments Interface): India's real-time interbank retail payment system, operated by NPCI.
+- NEFT (National Electronic Funds Transfer): batch-based interbank transfers in India.
+- RTGS (Real-Time Gross Settlement): high-value, time-critical interbank transfers in India.
+- IMPS (Immediate Payment Service): real-time 24/7 interbank transfers in India.
+- SWIFT: international wire transfers between banks globally.
+- Card networks (Visa, Mastercard, RuPay, Amex): facilitate card-based payments worldwide.

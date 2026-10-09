@@ -1,0 +1,34 @@
+Digital Payment Flow: Step-by-Step Overview
+
+A digital payment moves through five main stages: Initiation, Verification, Compliance Check, Processing, and Settlement.
+
+1. PAYMENT INITIATION
+The payment begins when a user authorises a transaction through a banking app, UPI interface, card terminal, or online checkout. The system records the payer's account details, payee details, amount, and timestamp. The payment instruction is packaged into a structured message and sent to the payment network.
+
+2. VERIFICATION
+The payment network and the payer's bank verify the transaction. Verification includes:
+- Authenticating the user (PIN, OTP, biometric, or 3D-Secure challenge).
+- Checking that the payer's account is active and has sufficient funds or credit.
+- Validating the payee's account or merchant details.
+- Checking for duplicate transactions.
+If any verification step fails, the payment is declined and the user is notified.
+
+3. COMPLIANCE CHECK
+Before a payment is processed, automated compliance systems run checks required by financial regulators:
+- AML (Anti-Money Laundering) screening flags patterns that suggest money laundering.
+- KYC (Know Your Customer) validation confirms account holder identity.
+- Sanctions screening checks the parties against government watchlists (e.g., OFAC, UN).
+- Transaction limits and velocity checks ensure the amount and frequency comply with regulations.
+If a compliance check flags an issue, the payment may be held, escalated to a human reviewer, or rejected.
+
+4. PROCESSING
+Once verified and cleared, the payment instruction is routed through an interbank network such as SWIFT (international), NEFT/RTGS/IMPS (India), or ACH (USA). The payer's bank debits the account; the message reaches the payee's bank.
+
+5. SETTLEMENT
+Settlement is when money actually moves between the banks' accounts held at a central bank or clearing house. Settlement can be:
+- Real-time gross settlement (RTGS): each transaction settles individually and immediately.
+- Deferred net settlement (DNS): multiple transactions are netted and settled at a fixed time (e.g., end of day).
+After settlement, the payee's account is credited and the payment is complete.
+
+Why does a payment sometimes show "Verifying..." for a long time?
+Most stages happen in under three seconds. Delays usually occur during compliance screening (a transaction may be held for manual review) or during settlement cut-off windows if a bank uses batch settlement.
