@@ -1,0 +1,72 @@
+FinTech Terminology: A plain-language guide to common terms in digital payments and financial technology.
+
+PAYMENT SYSTEMS AND NETWORKS
+
+UPI (Unified Payments Interface):
+A real-time payment system developed by the National Payments Corporation of India (NPCI). UPI allows users to transfer money instantly between bank accounts using a Virtual Payment Address (VPA), mobile number, or QR code. It operates 24/7 and supports both peer-to-peer and merchant payments. Examples of UPI apps: Google Pay, PhonePe, Paytm, BHIM.
+
+NEFT (National Electronic Funds Transfer):
+A batch-based fund transfer system operated by the Reserve Bank of India. NEFT processes transactions in hourly batches during banking hours. It is suitable for non-urgent transfers between bank accounts within India.
+
+RTGS (Real Time Gross Settlement):
+A real-time fund transfer system for high-value transactions (minimum ₹2 lakh in India). Each transaction is settled individually and immediately. Operated by the RBI.
+
+IMPS (Immediate Payment Service):
+A 24/7 instant fund transfer service available round the clock, including holidays. Available through mobile banking, internet banking, and ATMs.
+
+SWIFT (Society for Worldwide Interbank Financial Telecommunication):
+An international messaging network used by banks to send payment instructions across borders. SWIFT does not transfer money directly; it transmits secure messages between financial institutions.
+
+COMPLIANCE AND REGULATION TERMS
+
+KYC (Know Your Customer):
+A regulatory requirement that financial institutions must verify the identity of their customers before offering services. KYC typically involves collecting government-issued ID proof, address proof, and photograph. It helps prevent fraud and financial crimes.
+
+AML (Anti-Money Laundering):
+A set of laws, regulations, and procedures designed to prevent criminals from disguising illegally obtained funds as legitimate income. Financial institutions monitor transactions and report suspicious activity to regulators.
+
+CFT (Countering the Financing of Terrorism):
+Regulatory measures designed to prevent money from being used to fund terrorist activities. Financial institutions screen transactions and parties against terrorism watch lists.
+
+Sanctions Screening:
+The process of checking transaction parties against government-issued sanctions lists. Transactions involving sanctioned individuals, organizations, or countries are blocked. Lists include OFAC (USA), UN Security Council, and EU sanctions lists.
+
+TECHNICAL TERMS
+
+Payment Gateway:
+A technology service that securely captures and transmits payment information from the customer to the payment processor. It acts as the bridge between the merchant's platform and the financial network.
+
+Payment Processor:
+A company that handles the technical routing of payment transactions between banks and payment networks. It manages authorization, processing, and sometimes settlement.
+
+Acquiring Bank (Acquirer):
+The financial institution that processes credit or debit card payments on behalf of a merchant. It receives the payment instruction and forwards it to the card network.
+
+Issuing Bank (Issuer):
+The bank that issued the customer's payment card or holds their account. It approves or declines the transaction based on the customer's account status and available balance.
+
+PCI-DSS (Payment Card Industry Data Security Standard):
+A set of security standards that organizations handling card payments must comply with to protect cardholder data.
+
+Tokenization:
+The process of replacing sensitive payment information (such as a card number) with a unique digital token. The token is used for transaction processing while the real card number is stored securely elsewhere, reducing the risk of data theft.
+
+Encryption:
+Converting payment data into a coded form that can only be read by authorized systems. Payments are encrypted in transit to prevent interception.
+
+TRANSACTION STATES
+
+Pending: The transaction has been initiated and authorized, but settlement has not yet occurred.
+Processing: The payment is actively being routed between financial institutions.
+Completed/Settled: The money has successfully moved from the payer's account to the payee's account.
+Failed: The transaction did not complete. Reasons include insufficient funds, authentication failure, or network error.
+Reversed/Refunded: A completed transaction that was subsequently cancelled and the funds returned.
+On Hold/Flagged: The transaction has been held for additional review, typically by compliance systems.
+
+REGULATORY BODIES
+
+RBI (Reserve Bank of India): India's central bank and primary financial regulator. Regulates banks, payment systems, and monetary policy in India.
+NPCI (National Payments Corporation of India): Operates UPI, NEFT, IMPS, RuPay, and other payment infrastructure in India.
+SEBI (Securities and Exchange Board of India): Regulates securities markets and investment products in India.
+FinCEN (Financial Crimes Enforcement Network): US bureau that collects and analyzes financial transactions to combat financial crime.
+FATF (Financial Action Task Force): An international organization that sets global standards for combating money laundering and terrorism financing.

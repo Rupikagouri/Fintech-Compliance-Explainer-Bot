@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eee9dc">
+  <title>Part 1 · Setup & Retrieval</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f6f5f2;
+      --white: #fff;
+      --ink: #20231f;
+      --muted: #777d76;
+      --line: #e7e7e1;
+      --green: #2c6a50;
+      --green-soft: #e7f1e9;
+      --lime: #d8f078;
+      --amber: #f4ead1;
+      --shadow: 0 18px 55px rgba(26, 35, 28, .055);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); }
+    button, a { font: inherit; }
+    button { color: inherit; }
+    .shell { display: grid; grid-template-columns: 245px minmax(0, 1fr); min-height: 100vh; }
+    .sidebar { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding: 27px 17px 18px; background: #f1f0eb; border-right: 1px solid var(--line); }
+    .brand { display: flex; align-items: center; gap: 11px; padding: 0 10px; margin-bottom: 39px; font-weight: 720; letter-spacing: -.035em; }
+    .brand-mark { display: grid; width: 34px; height: 34px; place-items: center; color: #eff8dc; background: #244b38; border-radius: 11px; font-size: 17px; }
+    .brand small { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; font-weight: 550; letter-spacing: .04em; }
+    .nav-label { padding: 0 11px; color: #9a9e98; font-size: 9px; font-weight: 750; letter-spacing: .14em; text-transform: uppercase; }
+    .nav { display: grid; gap: 5px; margin: 10px 0 28px; }
+    .nav a { display: flex; align-items: center; gap: 11px; min-height: 41px; padding: 0 11px; border-radius: 10px; color: #676d66; text-decoration: none; font-size: 12px; font-weight: 560; transition: .18s ease; }
+    .nav a:hover, .nav a.active { background: #e5e9df; color: #294a37; }
+    .nav-icon { display: inline-grid; width: 19px; place-items: center; font-size: 15px; }
+    .sidebar-spacer { flex: 1; }
+    .side-note { padding: 15px; border: 1px solid #e4e5dc; border-radius: 14px; background: #f8f8f4; }
+    .side-note strong { display: block; margin-bottom: 6px; font-size: 11px; }
+    .side-note p { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.55; }
+    .profile { display: flex; align-items: center; gap: 10px; margin-top: 17px; padding: 7px 8px; }
+    .avatar { display: grid; width: 29px; height: 29px; place-items: center; border-radius: 50%; background: #e0dcd0; color: #48513f; font-size: 11px; font-weight: 700; }
+    .profile span { font-size: 11px; font-weight: 650; }
+    .profile small { display: block; margin-top: 2px; color: var(--muted); font-size: 9px; font-weight: 450; }
+    main { width: min(1180px, 100%); margin: 0 auto; padding: 30px clamp(20px, 4.5vw, 60px) 70px; }
+    .topline { display: flex; align-items: center; justify-content: space-between; margin-bottom: 39px; color: var(--muted); font-size: 11px; }
+    .crumb { display: flex; align-items: center; gap: 9px; }
+    .crumb b { color: var(--ink); font-weight: 650; }
+    .local-badge { display: flex; align-items: center; gap: 7px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 20px; background: #fafaf8; color: #68736a; font-size: 10px; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: #7aa583; box-shadow: 0 0 0 3px #e3eee4; }
+    .eyebrow { margin: 0 0 13px; color: var(--green); font-size: 10px; font-weight: 760; letter-spacing: .15em; text-transform: uppercase; }
+    h1 { max-width: 700px; margin: 0; font-size: clamp(35px, 5vw, 56px); line-height: 1.02; letter-spacing: -.065em; font-weight: 640; }
+    .intro { max-width: 590px; margin: 17px 0 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .intro code { padding: 2px 5px; border-radius: 5px; background: #edeee8; color: #42483f; font-size: .92em; }
+    .hero { position: relative; display: flex; min-height: 230px; align-items: flex-end; justify-content: space-between; gap: 30px; overflow: hidden; margin-top: 29px; padding: 30px 34px; border-radius: 19px; background: #244b38; color: white; box-shadow: var(--shadow); }
+    .hero::after { position: absolute; top: -115px; right: 105px; width: 300px; height: 300px; border: 1px solid rgba(237, 255, 213, .13); border-radius: 50%; content: ""; box-shadow: 0 0 0 34px rgba(237,255,213,.025), 0 0 0 68px rgba(237,255,213,.025); }
+    .hero-copy, .hero-progress { position: relative; z-index: 1; }
+    .hero-tag { display: inline-flex; align-items: center; gap: 7px; padding: 6px 9px; border-radius: 20px; background: rgba(255,255,255,.1); color: #e2eddb; font-size: 9px; font-weight: 650; letter-spacing: .045em; }
+    .hero h2 { max-width: 450px; margin: 17px 0 8px; font-size: clamp(21px, 2.7vw, 29px); font-weight: 570; letter-spacing: -.04em; }
+    .hero p { max-width: 460px; margin: 0; color: #c0d0c1; font-size: 11px; line-height: 1.65; }
+    .hero-progress { display: grid; min-width: 138px; place-items: center; padding: 17px; border: 1px solid rgba(255,255,255,.13); border-radius: 15px; background: rgba(255,255,255,.055); }
+    .ring { --progress: 67%; display: grid; width: 72px; height: 72px; place-items: center; border-radius: 50%; background: conic-gradient(var(--lime) var(--progress), rgba(255,255,255,.16) 0); position: relative; }
+    .ring::before { position: absolute; inset: 6px; border-radius: 50%; background: #244b38; content: ""; }
+    .ring strong { position: relative; font-size: 17px; font-weight: 620; }
+    .hero-progress small { margin-top: 9px; color: #d0dbd0; font-size: 9px; }
+    .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; margin: 17px 0 43px; }
+    .metric { display: flex; align-items: center; gap: 13px; min-height: 77px; padding: 15px 17px; border: 1px solid var(--line); border-radius: 13px; background: rgba(255,255,255,.66); }
+    .metric-icon { display: grid; width: 35px; height: 35px; place-items: center; border-radius: 10px; background: #edf1e9; font-size: 15px; }
+    .metric strong { display: block; font-size: 20px; font-weight: 670; letter-spacing: -.05em; }
+    .metric small { display: block; margin-top: 3px; color: var(--muted); font-size: 9px; }
+    section { scroll-margin-top: 25px; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 17px; }
+    .section-head h2 { margin: 0; font-size: 20px; font-weight: 640; letter-spacing: -.045em; }
+    .section-head p { margin: 5px 0 0; color: var(--muted); font-size: 10px; }
+    .quiet-link { border: 0; background: none; color: var(--green); font-size: 10px; font-weight: 650; cursor: pointer; }
+    .check-layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(220px, .8fr); gap: 14px; }
+    .card { border: 1px solid var(--line); border-radius: 14px; background: var(--white); box-shadow: 0 4px 18px rgba(30,40,32,.025); }
+    .check-card { padding: 6px 19px; }
+    .check-row { display: grid; grid-template-columns: 19px minmax(0, 1fr) auto; align-items: center; gap: 12px; min-height: 59px; border-bottom: 1px solid #f0f0eb; }
+    .check-row:last-child { border: 0; }
+    .check-row input { width: 15px; height: 15px; margin: 0; accent-color: var(--green); cursor: pointer; }
+    .check-copy { font-size: 11px; font-weight: 580; }
+    .check-copy small { display: block; margin-top: 4px; color: var(--muted); font-size: 9px; font-weight: 420; }
+    .status { padding: 5px 8px; border-radius: 20px; background: var(--green-soft); color: var(--green); font-size: 8px; font-weight: 700; white-space: nowrap; }
+    .status.pending { background: #f4f0e4; color: #8a7040; }
+    .next-card { display: flex; flex-direction: column; justify-content: space-between; min-height: 100%; padding: 19px; background: #edf3e9; }
+    .next-label { color: #64816b; font-size: 9px; font-weight: 730; letter-spacing: .12em; text-transform: uppercase; }
+    .next-card h3 { margin: 12px 0 7px; font-size: 16px; font-weight: 630; letter-spacing: -.035em; }
+    .next-card p { margin: 0; color: #6f7f70; font-size: 10px; line-height: 1.6; }
+    .pill { display: inline-flex; align-self: flex-start; align-items: center; gap: 6px; margin-top: 18px; padding: 7px 10px; border: 1px solid #d9e5d8; border-radius: 20px; background: #f7faf4; color: #45694f; font-size: 9px; font-weight: 650; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 43px; }
+    .file-card, .verify-card { padding: 19px; }
+    .file-list { display: grid; gap: 4px; margin-top: 14px; }
+    .file-button { display: grid; width: 100%; grid-template-columns: 18px 1fr auto; align-items: center; gap: 9px; padding: 9px 10px; border: 0; border-radius: 8px; background: transparent; text-align: left; cursor: pointer; }
+    .file-button:hover, .file-button.selected { background: #f2f5ef; }
+    .file-button span { color: #718272; font-size: 13px; }
+    .file-button strong { font-size: 10px; font-weight: 600; }
+    .file-button small { color: #a0a59d; font-size: 8px; }
+    .file-detail { min-height: 42px; margin: 11px 2px 0; padding: 11px 12px; border-radius: 9px; background: #f7f7f3; color: var(--muted); font-size: 9px; line-height: 1.55; }
+    .verify-card { background: #252d27; color: #f7f7f0; }
+    .verify-card .section-head p { color: #aeb8ad; }
+    .terminal { position: relative; overflow: hidden; margin-top: 13px; padding: 15px; border: 1px solid #39423b; border-radius: 10px; background: #1c231e; }
+    .terminal-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; color: #8e9c8e; font-size: 8px; }
+    .terminal-dots { display: flex; gap: 4px; }
+    .terminal-dots i { width: 6px; height: 6px; border-radius: 50%; background: #778575; }
+    .terminal code { display: block; color: #d8e5ce; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 9px; line-height: 1.9; white-space: pre-wrap; }
+    .terminal code em { color: #99bf8a; font-style: normal; }
+    .copy-btn { margin-top: 11px; padding: 7px 10px; border: 1px solid #4c5a4c; border-radius: 7px; background: #2b352d; color: #e1e8da; font-size: 9px; cursor: pointer; }
+    .copy-btn:hover { background: #344137; }
+    .files-section { margin-top: 43px; }
+    .file-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 11px; }
+    .info-tile { padding: 15px; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+    .info-tile .tile-icon { font-size: 16px; }
+    .info-tile h3 { margin: 11px 0 5px; font-size: 11px; font-weight: 640; }
+    .info-tile p { margin: 0; color: var(--muted); font-size: 9px; line-height: 1.6; }
+    .footer { display: flex; justify-content: space-between; gap: 15px; margin-top: 42px; padding-top: 15px; border-top: 1px solid var(--line); color: #969a93; font-size: 9px; }
+    .mobile-brand, .menu-btn { display: none; }
+    @media (max-width: 850px) {
+      .shell { grid-template-columns: 205px minmax(0, 1fr); }
+      .sidebar { padding-inline: 12px; }
+      main { padding-inline: 25px; }
+      .hero { padding-inline: 25px; }
+      .check-layout { grid-template-columns: 1fr; }
+      .next-card { min-height: 145px; }
+    }
+    @media (max-width: 640px) {
+      .shell { display: block; }
+      .sidebar { position: fixed; z-index: 5; left: 0; top: 0; width: 250px; transform: translateX(-105%); transition: transform .22s ease; box-shadow: var(--shadow); }
+      .sidebar.open { transform: translateX(0); }
+      .menu-btn { display: grid; width: 32px; height: 32px; place-items: center; border: 1px solid var(--line); border-radius: 9px; background: white; cursor: pointer; }
+      main { padding: 17px 17px 45px; }
+      .topline { margin-bottom: 31px; }
+      .crumb { gap: 6px; font-size: 10px; }
+      .local-badge { font-size: 0; padding: 8px; }
+      .local-badge .dot { margin: 0; }
+      .hero { align-items: flex-start; min-height: 0; flex-direction: column; gap: 20px; margin-top: 24px; padding: 22px; }
+      .hero::after { right: -120px; }
+      .hero-progress { display: flex; align-items: center; gap: 11px; padding: 8px 11px; }
+      .ring { width: 37px; height: 37px; }
+      .ring::before { inset: 4px; }
+      .ring strong { font-size: 10px; }
+      .hero-progress small { margin: 0; }
+      .metrics { gap: 7px; margin-bottom: 34px; }
+      .metric { min-height: 67px; gap: 8px; padding: 10px 8px; }
+      .metric-icon { width: 28px; height: 28px; font-size: 12px; }
+      .metric strong { font-size: 16px; }
+      .metric small { font-size: 8px; }
+      .check-row { gap: 8px; }
+      .two-col { grid-template-columns: 1fr; margin-top: 34px; }
+      .file-grid { grid-template-columns: 1fr 1fr; }
+      .footer { flex-direction: column; }
+    }
+    /* Dark, expressive hero inspired by the linked creative landing page. */
+    :root { color-scheme: dark; --paper:#050506; --white:#101013; --ink:#f3f1f6; --muted:#a3a0ab; --line:#25242b; --green:#c9b6ff; --green-soft:#211a30; --shadow:0 25px 90px rgba(0,0,0,.32); }
+    body { background:#050506; color:#f4f1f8; }
+    .shell { display:block; min-height:100vh; }
+    .sidebar { display:none; }
+    main { width:min(1440px,100%); padding:0 clamp(22px,6.5vw,96px) 75px; }
+    .topline { min-height:69px; margin:0 0 70px; border-bottom:1px solid rgba(255,255,255,.09); color:#bcb9c4; }
+    .wordmark { display:flex; align-items:center; gap:8px; color:#f4f1f8; font-size:11px; font-weight:760; letter-spacing:.09em; }
+    .wordmark-glyph { color:#a783ff; font-size:17px; }
+    .wordmark-light { color:#797581; font-size:9px; font-weight:600; }
+    .topnav { display:flex; align-items:center; gap:26px; margin-left:auto; margin-right:27px; }
+    .topnav a { color:#c5c1cb; font-size:8px; font-weight:680; letter-spacing:.12em; text-decoration:none; }
+    .topnav a:hover { color:#fff; }
+    .topnav .nav-cta { display:flex; gap:10px; padding:10px 13px; border-radius:20px; background:#814cff; color:#fff; }
+    .topnav .nav-cta:hover, .hero-button:hover { background:#966dff; }
+    .local-badge { border-color:#29272f; background:#101013; color:#aaa6b2; font-size:8px; letter-spacing:.08em; }
+    .dot { background:#b394ff; box-shadow:0 0 0 3px rgba(150,112,255,.14); }
+    .eyebrow { margin-bottom:16px; color:#b89cff; font-size:9px; letter-spacing:.19em; }
+    h1 { max-width:760px; font-size:clamp(51px,6.1vw,88px); line-height:.91; letter-spacing:-.078em; font-weight:510; }
+    .intro { max-width:430px; margin-top:20px; color:#a5a1ac; font-size:12px; line-height:1.8; }
+    .hero { min-height:460px; align-items:center; gap:0; overflow:visible; margin-top:0; padding:0; border-radius:0; background:transparent; box-shadow:none; }
+    .hero::after { display:none; }
+    .hero-copy { width:43%; flex-shrink:0; padding:5px 0 28px; }
+    .hero-copy h1 { max-width:530px; }
+    .hero-tag { border:1px solid rgba(172,144,255,.2); background:rgba(134,82,255,.09); color:#c2adff; font-size:8px; letter-spacing:.11em; }
+    .hero h2 { margin:19px 0 10px; color:#f2eff7; font-size:clamp(21px,2.8vw,31px); line-height:1.1; font-weight:470; letter-spacing:-.052em; }
+    .hero p { max-width:360px; color:#97939f; font-size:10px; line-height:1.8; }
+    .hero-button { display:inline-flex; align-items:center; gap:18px; margin-top:20px; padding:11px 14px; border-radius:20px; background:#814cff; color:#fff; font-size:8px; font-weight:730; letter-spacing:.1em; text-decoration:none; transition:background .2s; }
+    .hero-progress { position:absolute; right:clamp(15px,3vw,42px); bottom:7px; display:flex; align-items:center; gap:11px; min-width:0; padding:9px 12px; border:1px solid #29262f; border-radius:28px; background:rgba(17,16,20,.8); }
+    .ring { width:40px; height:40px; }
+    .ring::before { background:#111013; }
+    .ring strong { font-size:10px; }
+    .hero-progress small { margin:0; color:#b7b2c0; font-size:8px; }
+    .metrics { gap:10px; margin:8px 0 55px; }
+    .metric { border-color:#24232a; background:#0d0d10; }
+    .metric-icon { background:#19151f; color:#c7adff; }
+    .metric strong { color:#f4f1f8; }
+    .metric small { color:#938f9a; }
+    .section-head h2 { color:#f2eff6; font-size:21px; font-weight:520; }
+    .section-head p { color:#8f8b96; }
+    .quiet-link { color:#b79cff; }
+    .card { border-color:#25242b; background:#0e0e11; box-shadow:none; }
+    .check-card { padding-inline:19px; }
+    .check-row { border-color:#222127; }
+    .check-copy { color:#e6e2eb; }
+    .check-copy small { color:#8c8893; }
+    .status { background:#1d2a23; color:#a8d0b6; }
+    .status.pending { background:#29231a; color:#d8bd83; }
+    .next-card { border-color:#2b2434; background:#15111d; }
+    .next-label { color:#bd9cff; }
+    .next-card h3 { color:#f4effb; font-weight:500; }
+    .next-card p { color:#a29aa9; }
+    .pill { border-color:#3b2d50; background:#21182d; color:#d0baff; }
+    .file-button:hover, .file-button.selected { background:#19151f; }
+    .file-button span { color:#b59aff; }
+    .file-button strong { color:#e9e5ed; }
+    .file-button small { color:#797580; }
+    .file-detail { background:#151419; color:#a29eaa; }
+    .verify-card { border-color:#292630; background:#111014; }
+    .verify-card .section-head p { color:#95909d; }
+    .terminal { border-color:#312d37; background:#09090b; }
+    .terminal code { color:#d9c9ff; }
+    .terminal code em { color:#b696ff; }
+    .copy-btn { border-color:#423357; background:#21182e; color:#dfd0ff; }
+    .copy-btn:hover { background:#302143; }
+    .info-tile { border-color:#24232a; background:#0e0e11; }
+    .info-tile h3 { color:#e9e5ef; }
+    .info-tile p { color:#96919e; }
+    .footer { border-color:#25242b; color:#77737e; }
+    @media (max-width:850px) {
+      main { padding-inline:28px; }
+      .hero { min-height:405px; }
+    }
+    @media (max-width:640px) {
+      main { padding:0 18px 48px; }
+      .topline { min-height:61px; margin-bottom:48px; }
+      .topnav { gap:12px; margin-right:0; }
+      .topnav a { font-size:7px; }
+      .topnav a:not(.nav-cta) { display:none; }
+      .local-badge { display:none; }
+      h1 { font-size:clamp(54px,14vw,76px); }
+      .intro { max-width:355px; font-size:11px; }
+      .hero { min-height:0; flex-direction:column; align-items:stretch; gap:0; margin-top:18px; }
+      .hero-copy { width:100%; padding:10px 0 0; }
+      .hero-progress { right:3px; bottom:16px; }
+      .metrics { margin-top:8px; }
+      .metric { display:block; padding:10px 8px; }
+      .metric-icon { margin-bottom:7px; }
+      .file-grid { grid-template-columns:1fr 1fr; }
+    }
+    /* Parchment, engraved lines, and a framed illustration inspired by the reference. */
+    :root { color-scheme: light; --paper:#eee9dc; --white:#f8f5eb; --ink:#24251f; --muted:#77756c; --line:#d9d2c2; --green:#52634c; --green-soft:#e2e4d8; --shadow:0 16px 40px rgba(46,39,25,.12); }
+    body { background:#e8e2d4; color:var(--ink); }
+    .shell { display:block; }
+    .sidebar { display:none; }
+    main { width:min(1250px,100%); padding:0 clamp(16px,4vw,55px) 60px; }
+    .topline { min-height:68px; margin:0 0 22px; border-bottom:1px solid #cfc8b8; color:#65645b; }
+    .wordmark { color:#262820; font-family:Georgia,serif; font-size:13px; letter-spacing:.12em; }
+    .wordmark-glyph { color:#31372c; }
+    .wordmark-light { color:#777368; }
+    .topnav { gap:clamp(12px,2.8vw,34px); }
+    .topnav a { color:#57574f; font-size:9px; }
+    .topnav a:hover { color:#151711; }
+    .topnav .nav-cta,.hero-button { border:1px solid #32342c; border-radius:24px; background:transparent; color:#282a23; }
+    .topnav .nav-cta:hover,.hero-button:hover { background:#30342a; color:#f4efdf; }
+    .local-badge { border-color:#d0c9b9; background:#f3efe4; color:#68675e; }
+    .dot { background:#71816a; box-shadow:0 0 0 3px #dfe4d8; }
+    #overview > .eyebrow { display:none; }
+    .hero { min-height:0; height:clamp(360px,47vw,560px); align-items:center; overflow:hidden; margin:0; padding:clamp(22px,5vw,64px); border:3px solid #22231e; border-radius:28px; background:#e9e4d5; color:#24251f; box-shadow:0 12px 35px rgba(40,35,24,.14),inset 0 0 0 1px rgba(255,255,255,.65); }
+    .hero::before { position:absolute; inset:8px; border:1px solid rgba(38,38,31,.18); border-radius:19px; content:""; pointer-events:none; }
+    .hero::after { top:auto; right:-20px; bottom:-115px; width:65%; height:190px; border:0; border-top:2px solid rgba(54,57,49,.58); border-radius:50%; box-shadow:0 -17px 0 -1px #e9e4d5,0 -19px 0 -1px rgba(54,57,49,.43),0 -39px 0 -2px #e9e4d5,0 -41px 0 -2px rgba(54,57,49,.31); }
+    .hero-copy { z-index:2; width:42%; padding:0 0 10px; }
+    .hero-copy h1 { max-width:510px; color:#24251f; font-family:Georgia,'Times New Roman',serif; font-size:clamp(46px,6.6vw,86px); font-weight:500; line-height:.86; letter-spacing:-.075em; text-transform:uppercase; }
+    .intro { max-width:390px; margin-top:18px; color:#69685f; font-size:12px; line-height:1.7; }
+    .hero-tag { margin-top:20px; border:1px solid rgba(51,52,44,.22); background:rgba(255,255,255,.28); color:#525449; font-size:8px; letter-spacing:.1em; }
+    .hero h2 { margin:14px 0 6px; color:#33342c; font-family:Georgia,serif; font-size:clamp(17px,2vw,24px); font-weight:500; }
+    .hero p { max-width:345px; color:#6b695f; font-size:10px; line-height:1.65; }
+    .hero-button { margin-top:17px; padding:10px 17px; font-size:8px; letter-spacing:.08em; }
+    .money-art { position:absolute; z-index:1; top:4%; right:1%; width:62%; height:94%; cursor:grab; touch-action:pan-y; outline:none; }
+    .money-art:active { cursor:grabbing; }
+    .money-art:focus-visible { outline:2px solid #6c755d; outline-offset:-14px; border-radius:20px; }
+    .art-hint { position:absolute; z-index:3; right:clamp(18px,3vw,42px); bottom:20px; color:#68675f; font-size:8px; letter-spacing:.06em; }
+    .hero-progress { z-index:4; right:clamp(16px,3vw,35px); bottom:15px; padding:7px 11px; border:1px solid rgba(48,49,40,.22); background:rgba(242,238,224,.84); }
+    .ring { width:37px; height:37px; background:conic-gradient(#68775d var(--progress),rgba(65,68,57,.15) 0); }
+    .ring::before { background:#eee9dc; }
+    .ring strong { color:#303329; font-size:10px; }
+    .hero-progress small { color:#626258; }
+    .metrics { margin:14px 0 48px; }
+    .metric,.card,.info-tile { border-color:#d8d1c1; background:rgba(248,245,235,.85); box-shadow:0 4px 18px rgba(50,43,30,.035); }
+    .metric-icon { background:#e4e2d5; color:#4c5845; }
+    .section-head h2 { color:#282921; font-family:Georgia,serif; font-weight:500; }
+    .section-head p,.check-copy small,.next-card p,.info-tile p { color:#77746a; }
+    .quiet-link { color:#52634c; }
+    .check-row { border-color:#e7e1d5; }
+    .check-copy,.file-button strong,.info-tile h3 { color:#33342d; }
+    .status { background:#e0e6d9; color:#4f624b; }
+    .status.pending { background:#eee5d2; color:#826d45; }
+    .next-card { border-color:#d9d6c7; background:#e8e8dc; }
+    .next-label { color:#63745a; }
+    .next-card h3 { color:#33352d; font-family:Georgia,serif; font-weight:500; }
+    .pill { border-color:#d2d6c8; background:#f3f2e9; color:#52634c; }
+    .file-button:hover,.file-button.selected { background:#eeece2; }
+    .file-button span { color:#65755b; }
+    .file-button small { color:#929084; }
+    .file-detail { background:#f0ede3; color:#6d6b61; }
+    .verify-card { border-color:#46483e; background:#30332c; color:#f3efdf; }
+    .verify-card .section-head h2 { color:#f3efdf; }
+    .verify-card .section-head p { color:#c0beaf; }
+    .terminal { border-color:#55594e; background:#242720; }
+    .terminal code { color:#e5e4d3; }
+    .terminal code em { color:#b9c99f; }
+    .copy-btn { border-color:#626653; background:#414639; color:#f2efdf; }
+    .copy-btn:hover { background:#505744; }
+    .footer { border-color:#d0c9b9; color:#858174; }
+    @media (max-width:850px) { .hero { height:440px; } .hero-copy { width:46%; } .money-art { width:62%; } }
+    @media (max-width:640px) {
+      main { padding:0 12px 42px; }
+      .topline { min-height:59px; margin-bottom:13px; }
+      .topnav a:not(.nav-cta) { display:none; }
+      .topnav .nav-cta { font-size:7px; }
+      .hero { height:620px; flex-direction:column; align-items:stretch; justify-content:flex-start; gap:0; padding:27px 23px; border-radius:23px; }
+      .hero-copy { width:100%; padding:0; }
+      .hero-copy h1 { font-size:clamp(45px,13vw,67px); }
+      .intro { max-width:340px; margin-top:12px; }
+      .hero-tag { margin-top:13px; }
+      .hero h2 { margin-top:10px; }
+      .hero-copy > p:not(.intro) { max-width:300px; }
+      .hero-button { margin-top:12px; }
+      .money-art { top:44%; right:0; width:100%; height:52%; }
+      .hero-progress { right:13px; bottom:12px; }
+      .art-hint { left:20px; right:auto; bottom:21px; }
+      .metrics { gap:7px; }
+      .metric { display:block; padding:10px 8px; }
+      .metric-icon { margin-bottom:7px; }
+      .file-grid { grid-template-columns:1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand"><div class="brand-mark">⌘</div><div>Build Notes<small>RAG ASSISTANT · PROJECT</small></div></div>
+      <div class="nav-label">Workspace</div>
+      <nav class="nav" aria-label="Main navigation">
+        <a class="active" href="#overview"><span class="nav-icon">◫</span>Overview</a>
+        <a href="#checklist"><span class="nav-icon">☷</span>Checklist</a>
+        <a href="#files"><span class="nav-icon">▤</span>Files & notes</a>
+        <a href="#verify"><span class="nav-icon">⌁</span>How to check</a>
+      </nav>
+      <div class="nav-label">Project parts</div>
+      <nav class="nav" aria-label="Project parts">
+        <a class="active" href="#overview"><span class="nav-icon">01</span>Setup & retrieval</a>
+        <a href="#next"><span class="nav-icon">02</span>RAG & safety <span style="margin-left:auto;font-size:8px">NEXT</span></a>
+        <a href="#next"><span class="nav-icon">03</span>Application layer</a>
+      </nav>
+      <div class="sidebar-spacer"></div>
+      <div class="side-note"><strong>One step at a time</strong><p>Part 1 prepares the documents and search layer. The answer function comes in the next project part.</p></div>
+      <div class="profile"><div class="avatar">P1</div><span>Person 1<small>Knowledge & retrieval</small></span></div>
+    </aside>
+
+    <main>
+      <div class="topline">
+        <div class="wordmark"><span class="wordmark-glyph">✳</span> KNOWLEDGE<span class="wordmark-light">/ PART 01</span></div>
+        <nav class="topnav" aria-label="Page navigation"><a href="#checklist">THE WORK</a><a href="#files">FILES</a><a class="nav-cta" href="#verify">CHECK SETUP <span>↗</span></a></nav>
+        <div class="local-badge"><i class="dot"></i> PROJECT NOTES</div>
+      </div>
+
+      <section id="overview">
+        <p class="eyebrow">RAG ASSISTANT · IMPLEMENTATION 01</p>
+        <div class="hero">
+          <div class="hero-copy">
+            <h1>Make sense<br>of money<br>in motion.</h1>
+            <p class="intro">Follow the flow behind digital payments. Part 1 lays the knowledge foundation that helps an assistant find clear, useful context.</p>
+            <span class="hero-tag"><span>✳</span> FINTECH · KNOWLEDGE & RETRIEVAL</span>
+            <h2>Every payment has a story.</h2>
+            <p>Explore how verification, settlement, and compliance fit together. The assistant uses curated knowledge to explain each step.</p>
+            <a class="hero-button" href="#checklist">EXPLORE PART 1 <span>↓</span></a>
+          </div>
+          <canvas class="money-art" id="moneyCanvas" role="button" tabindex="0" aria-label="Interactive animated illustration of money in a payment flow. Click or press Enter to send coins floating."></canvas>
+          <span class="art-hint">MOVE TO EXPLORE · CLICK TO SEND A COIN</span>
+          <div class="hero-progress" aria-label="4 of 6 items implemented">
+            <div class="ring"><strong>4/6</strong></div>
+            <small>implementation steps</small>
+          </div>
+        </div>
+
+        <div class="metrics" aria-label="Part 1 at a glance">
+          <div class="metric"><div class="metric-icon">▤</div><div><strong>6</strong><small>knowledge files added</small></div></div>
+          <div class="metric"><div class="metric-icon">⌘</div><div><strong>4</strong><small>retrieval functions</small></div></div>
+          <div class="metric"><div class="metric-icon">✓</div><div><strong>14</strong><small>checks written · not run yet</small></div></div>
+        </div>
+      </section>
+
+      <section id="checklist">
+        <div class="section-head"><div><h2>Part 1 checklist</h2><p>Tick items as you complete them. Your choices stay in this browser.</p></div><button class="quiet-link" id="resetChecks">Reset</button></div>
+        <div class="check-layout">
+          <div class="card check-card" id="checkList">
+            <label class="check-row"><input type="checkbox" checked data-key="files"><span class="check-copy">Project setup files added<small>Dependencies and Git ignore rules are in place.</small></span><span class="status">DONE</span></label>
+            <label class="check-row"><input type="checkbox" checked data-key="knowledge"><span class="check-copy">Knowledge files copied<small>Six AI and ML text files are in the data folder.</small></span><span class="status">DONE</span></label>
+            <label class="check-row"><input type="checkbox" checked data-key="functions"><span class="check-copy">Retrieval functions added<small>Load, split, embed, and retrieve text documents.</small></span><span class="status">DONE</span></label>
+            <label class="check-row"><input type="checkbox" checked data-key="tests"><span class="check-copy">14 tests written<small>Six setup checks and eight retrieval checks.</small></span><span class="status">WRITTEN</span></label>
+            <label class="check-row"><input type="checkbox" data-key="run"><span class="check-copy">Install packages and run checks<small>This has not been verified in the project environment yet.</small></span><span class="status pending">TO DO</span></label>
+            <label class="check-row"><input type="checkbox" data-key="next"><span class="check-copy">Connect the answer function<small>The next part adds ask() and error handling.</small></span><span class="status pending">NEXT PART</span></label>
+          </div>
+          <article class="card next-card" id="next">
+            <div><span class="next-label">What comes next</span><h3>RAG pipeline & safety</h3><p>The next project part connects retrieved text to the local language model, handles empty questions, and responds safely if Ollama is unavailable.</p></div>
+            <span class="pill">Part 2 <span>↗</span></span>
+          </article>
+        </div>
+      </section>
+
+      <div class="two-col">
+        <section class="card file-card" id="files">
+          <div class="section-head"><div><h2>What’s in the folder</h2><p>Select a file to see what it does.</p></div></div>
+          <div class="file-list">
+            <button class="file-button selected" data-file="pipeline"><span>⌘</span><strong>rag_pipeline.py</strong><small>CORE</small></button>
+            <button class="file-button" data-file="data"><span>▤</span><strong>data/</strong><small>6 TEXT FILES</small></button>
+            <button class="file-button" data-file="deps"><span>⇩</span><strong>requirements.txt</strong><small>PACKAGES</small></button>
+            <button class="file-button" data-file="tests"><span>✓</span><strong>tests/</strong><small>14 CHECKS</small></button>
+            <button class="file-button" data-file="ignore"><span>⊘</span><strong>.gitignore</strong><small>PROJECT HYGIENE</small></button>
+          </div>
+          <div class="file-detail" id="fileDetail" aria-live="polite">Contains the functions that read text files, split them into chunks, build a FAISS index, and create the retriever.</div>
+        </section>
+
+        <section class="card verify-card" id="verify">
+          <div class="section-head"><div><h2>Check it yourself</h2><p>Run these from the project folder in a terminal.</p></div></div>
+          <div class="terminal">
+            <div class="terminal-top"><span class="terminal-dots"><i></i><i></i><i></i></span><span>TERMINAL · BASH</span></div>
+            <code><em>$</em> python -m venv .venv
+<em>$</em> source .venv/bin/activate
+<em>$</em> python -m pip install -r requirements.txt
+<em>$</em> pytest -q tests/test_project_setup.py tests/test_retrieval.py</code>
+          </div>
+          <button class="copy-btn" id="copyCommand">Copy check commands</button>
+        </section>
+      </div>
+
+      <section class="files-section" aria-labelledby="includedTitle">
+        <div class="section-head"><div><h2 id="includedTitle">What the code now does</h2><p>The main pieces of the retrieval setup, in plain language.</p></div></div>
+        <div class="file-grid">
+          <article class="info-tile"><span class="tile-icon">📂</span><h3>Read the documents</h3><p>Finds text files in the data folder and reports a clear error if the folder or files are missing.</p></article>
+          <article class="info-tile"><span class="tile-icon">✂️</span><h3>Split into chunks</h3><p>Breaks long documents into pieces of up to 500 characters, with a small overlap between pieces.</p></article>
+          <article class="info-tile"><span class="tile-icon">🔎</span><h3>Find useful text</h3><p>Turns chunks into vectors and uses FAISS to retrieve the five closest matches for a question.</p></article>
+        </div>
+      </section>
+      <footer class="footer"><span>RAG Assistant · Implementation Part 1</span><span>Made for the project handoff · 2026</span></footer>
+    </main>
+  </div>
+  <script>
+    (() => {
+      const canvas = document.getElementById('moneyCanvas');
+      const ctx = canvas.getContext('2d');
+      const notes = Array.from({length: 7}, (_, i) => ({
+        x: .45 + (i % 3) * .17 + (Math.random() - .5) * .08,
+        y: .20 + Math.floor(i / 3) * .23 + (Math.random() - .5) * .08,
+        scale: .57 + Math.random() * .33, angle: (Math.random() - .5) * .38,
+        phase: Math.random() * Math.PI * 2, drift: .012 + Math.random() * .018
+      }));
+      const coins = [];
+      let width = 0, height = 0, dpr = 1, pointerX = 0, pointerY = 0;
+      const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      function resize() {
+        const box = canvas.getBoundingClientRect();
+        dpr = Math.min(devicePixelRatio || 1, 2); width = box.width; height = box.height;
+        canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        if (reducedMotion) draw(0);
+      }
+      function drawNote(x, y, size, angle, time, alpha = 1) {
+        ctx.save(); ctx.translate(x, y); ctx.rotate(angle); ctx.globalAlpha = alpha;
+        const w = size, h = size * .61;
+        ctx.fillStyle = '#d8c99d'; ctx.strokeStyle = '#555747'; ctx.lineWidth = Math.max(1, size * .009);
+        ctx.shadowColor = 'rgba(48,42,29,.18)'; ctx.shadowBlur = 13; ctx.shadowOffsetY = 7;
+        ctx.beginPath(); ctx.roundRect(-w/2,-h/2,w,h,5); ctx.fill(); ctx.stroke();
+        ctx.shadowColor = 'transparent'; ctx.strokeStyle = 'rgba(73,75,59,.58)'; ctx.lineWidth = Math.max(.7,size*.004);
+        ctx.strokeRect(-w*.45,-h*.38,w*.9,h*.76);
+        ctx.beginPath(); ctx.ellipse(0,0,h*.27,h*.36,0,0,Math.PI*2); ctx.stroke();
+        ctx.beginPath(); ctx.ellipse(0,0,h*.19,h*.27,0,0,Math.PI*2); ctx.stroke();
+        ctx.fillStyle = '#484b3c'; ctx.font = `bold ${Math.max(12,size*.2)}px Georgia`;
+        ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('₹',0,1);
+        ctx.font = `bold ${Math.max(7,size*.055)}px Georgia`;
+        ctx.fillText('RESERVE BANK OF INDIA',0,-h*.34); ctx.fillText('ONE RUPEE',0,h*.36);
+        for (const side of [-1,1]) {
+          ctx.fillText('₹',side*w*.37,0);
+          for(let j=-2;j<=2;j++) { ctx.beginPath(); ctx.moveTo(side*w*.29,j*h*.075); ctx.lineTo(side*w*.34,j*h*.075); ctx.stroke(); }
+        }
+        ctx.restore();
+      }
+      function drawCoin(x,y,r,spin=0) {
+        ctx.save(); ctx.translate(x,y); ctx.scale(Math.max(.18,Math.abs(Math.cos(spin))),1);
+        ctx.fillStyle='#b89755'; ctx.strokeStyle='#55503d'; ctx.lineWidth=1.5;
+        ctx.beginPath(); ctx.ellipse(0,0,r,r*.76,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
+        ctx.strokeStyle='rgba(255,245,202,.75)'; ctx.lineWidth=1;
+        ctx.beginPath(); ctx.ellipse(0,0,r*.78,r*.57,0,0,Math.PI*2); ctx.stroke();
+        ctx.fillStyle='#f0dfad'; ctx.font=`bold ${r*.95}px Georgia`; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('₹',0,1);
+        ctx.restore();
+      }
+      function draw(time) {
+        ctx.clearRect(0,0,width,height);
+        // Fine engraved orbit lines keep the money illustration integrated with the paper scene.
+        ctx.strokeStyle='rgba(70,72,59,.22)'; ctx.lineWidth=1;
+        for(let row=0;row<4;row++) {
+          ctx.beginPath();
+          for(let x=-10;x<=width+10;x+=8) {
+            const y=height*(.71+row*.055)+Math.sin(x*.012+time*.00045+row)*8+pointerY*7;
+            if(x===-10) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+          }
+          ctx.stroke();
+        }
+        notes.forEach((note,i)=> {
+          const bob = reducedMotion ? 0 : Math.sin(time*.0007+note.phase)*10;
+          drawNote(width*(note.x-pointerX*.035),height*note.y+bob+pointerY*9,Math.min(width,height)*note.scale,
+            note.angle+pointerX*.11+Math.sin(time*.0004+note.phase)*.025,time, .96-i*.035);
+        });
+        for(let i=0;i<3;i++) drawCoin(width*(.64+i*.12-pointerX*.025),height*(.76+Math.sin(time*.001+i*2)*.025),Math.min(width,height)*(.043-i*.006),time*.001+i*1.7);
+        for(let i=coins.length-1;i>=0;i--) {
+          const c=coins[i], age=(time-c.born)/1150;
+          if(age>=1) { coins.splice(i,1); continue; }
+          drawCoin(c.x+c.vx*age*90,c.y-c.vy*age*100,Math.min(width,height)*.045*(1-age*.25),time*.004+i);
+        }
+        ctx.globalAlpha=1;
+        if(!reducedMotion) requestAnimationFrame(draw);
+      }
+      function toss(event) {
+        const box=canvas.getBoundingClientRect();
+        const x=event?.clientX ? event.clientX-box.left : width*.65;
+        const y=event?.clientY ? event.clientY-box.top : height*.72;
+        for(let i=0;i<7;i++) coins.push({x,y,born:performance.now(),vx:(Math.random()-.35)*2,vy:.7+Math.random()*1.4});
+        if(reducedMotion) draw(performance.now());
+      }
+      canvas.addEventListener('pointermove',event=> {
+        const box=canvas.getBoundingClientRect(); pointerX=(event.clientX-box.left)/box.width-.5; pointerY=(event.clientY-box.top)/box.height-.5;
+      });
+      canvas.addEventListener('pointerleave',()=>{pointerX=0;pointerY=0;});
+      canvas.addEventListener('click',toss);
+      canvas.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();toss();}});
+      addEventListener('resize',resize); resize();
+      if(!reducedMotion) requestAnimationFrame(draw);
+    })();
+
+    const checks = [...document.querySelectorAll('#checkList input')];
+    const saved = JSON.parse(localStorage.getItem('part1-checks') || '{}');
+    checks.forEach(box => {
+      if (Object.hasOwn(saved, box.dataset.key)) box.checked = saved[box.dataset.key];
+      box.addEventListener('change', () => {
+        const state = Object.fromEntries(checks.map(item => [item.dataset.key, item.checked]));
+        localStorage.setItem('part1-checks', JSON.stringify(state));
+      });
+    });
+    document.getElementById('resetChecks').addEventListener('click', () => {
+      localStorage.removeItem('part1-checks');
+      checks.forEach(box => box.checked = box.defaultChecked);
+    });
+    const descriptions = {
+      pipeline: 'Contains the functions that read text files, split them into chunks, build a FAISS index, and create the retriever.',
+      data: 'Six source documents about generative AI, India, the USA, linear regression, deep learning, and machine learning.',
+      deps: 'Lists the exact Python package versions needed by this project. Install them with pip before running the tests.',
+      tests: 'Contains setup checks and tests for loading documents, splitting chunks, and configuring the retriever.',
+      ignore: 'Keeps virtual environments, secrets files, and Python temporary files out of Git.'
+    };
+    document.querySelectorAll('.file-button').forEach(button => button.addEventListener('click', () => {
+      document.querySelectorAll('.file-button').forEach(item => item.classList.remove('selected'));
+      button.classList.add('selected');
+      document.getElementById('fileDetail').textContent = descriptions[button.dataset.file];
+    }));
+    const command = 'cd "/home/rupix/Langchain_Learning/4 project/4 project"\npython -m venv .venv\nsource .venv/bin/activate\npython -m pip install -r requirements.txt\npytest -q tests/test_project_setup.py tests/test_retrieval.py';
+    document.getElementById('copyCommand').addEventListener('click', async event => {
+      const button = event.currentTarget;
+      try {
+        await navigator.clipboard.writeText(command);
+        button.textContent = 'Copied';
+      } catch {
+        button.textContent = 'Select and copy from README.md';
+      }
+      setTimeout(() => button.textContent = 'Copy check commands', 2200);
+    });
+    document.querySelectorAll('.nav a').forEach(link => link.addEventListener('click', () => {
+      document.querySelectorAll('.nav a').forEach(item => item.classList.remove('active'));
+      link.classList.add('active');
+    }));
+  </script>
+</body>
+</html>

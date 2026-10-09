@@ -1,73 +1,30 @@
-Financial Compliance: Rules That Govern Payment Transactions
+Compliance checks are the third stage of a digital payment. They are automated checks performed by financial institutions to ensure that a transaction follows legal and regulatory requirements.
 
-WHAT IS COMPLIANCE IN PAYMENTS?
-Financial compliance means following the laws, regulations, and rules that govern how money can be moved, stored, and reported. When a payment system performs a "compliance check," it is running automated tests to make sure a transaction does not break those rules.
+What compliance checks:
+1. AML (Anti-Money Laundering) — Screens the transaction and parties involved against known patterns of money laundering. Unusually large or structured transactions may be flagged.
+2. KYC (Know Your Customer) — Verifies that the payer's identity has been established in accordance with regulations. Banks are required by law to verify the identity of their customers.
+3. Sanctions screening — Checks the names and account details of the payer and payee against government and international sanctions lists (e.g., OFAC, UN, EU lists). Transactions involving sanctioned individuals or entities are blocked.
+4. CFT (Counter-Terrorism Financing) — Checks for any link to terrorism financing activities.
+5. Fraud detection — Automated systems analyze the transaction against typical behavior patterns for the account. An unusual transaction (wrong location, unusual time, large amount) may be flagged for additional review.
+6. Transaction limits — Checks whether the transaction exceeds regulatory or bank-imposed limits (e.g., daily transfer limits, single transaction limits).
+7. Reporting thresholds — Transactions above certain amounts may be automatically reported to regulators. In India, the Financial Intelligence Unit (FIU-IND) receives reports of high-value transactions.
 
-Compliance is not optional. Regulated entities (banks, payment processors, wallets) must perform these checks or face large fines, loss of operating licences, or criminal charges.
+Why compliance checks sometimes cause delays:
+Most compliance checks are automated and complete in milliseconds. However, if a transaction is flagged by an automated system, it may be placed in a queue for manual review by a compliance officer. This can take minutes, hours, or even days depending on the complexity.
 
-KEY COMPLIANCE AREAS
+The "Compliance check in progress" message typically means the automated systems are screening the transaction against these rules.
 
-AML – ANTI-MONEY LAUNDERING
-Money laundering is the process of making illegally obtained money appear to come from a legitimate source. AML rules require financial institutions to:
-- Monitor transactions for patterns that suggest laundering (e.g., many small deposits followed by one large withdrawal, called "structuring").
-- Screen customers and transactions against watchlists.
-- File Suspicious Activity Reports (SARs) or Suspicious Transaction Reports (STRs) with regulators when something looks wrong.
-- Keep records for several years so transactions can be audited.
+Is this normal?
+Yes. Compliance checks happen on every transaction. The vast majority are cleared instantly. If you see a compliance-related message for an unusual period, it usually means the automated system has flagged something for a closer look. This is a safety feature, not necessarily a sign of wrongdoing.
 
-In India, the Prevention of Money Laundering Act (PMLA) 2002 governs AML obligations. The Financial Intelligence Unit – India (FIU-IND) receives suspicious transaction reports.
-Globally, the Financial Action Task Force (FATF) sets the international AML standards.
+What happens if a compliance check fails:
+- The transaction is blocked or held.
+- You may be contacted by your bank for additional documentation.
+- Funds in transit may be returned to the original account.
+- In serious cases, the matter may be reported to financial regulators.
 
-KYC – KNOW YOUR CUSTOMER
-KYC is the process of verifying who your customer actually is before opening an account or allowing large transactions. Required information typically includes:
-- Government-issued photo ID (passport, Aadhaar, PAN card in India, driver's licence).
-- Proof of address.
-- Date of birth.
-- For businesses: company registration documents and details of beneficial owners.
-KYC must be refreshed periodically and when a customer's risk profile changes.
-
-In India, the RBI mandates KYC for all bank accounts. Accounts without complete KYC have restricted features.
-The Aadhaar-based eKYC system allows digital KYC using biometric or OTP verification linked to the Aadhaar database.
-
-CFT – COUNTER-FINANCING OF TERRORISM
-CFT rules are similar to AML but focus on preventing money from reaching terrorist organisations. Payments to or from parties on government sanctions lists are blocked immediately.
-
-SANCTIONS SCREENING
-Sanctions are government or international restrictions on dealing with specific countries, entities, or individuals. Every payment must be screened against sanctions lists, including:
-- OFAC (U.S. Office of Foreign Assets Control) lists.
-- UN Security Council sanctions lists.
-- EU restrictive measures lists.
-- Country-specific lists (e.g., India's Ministry of Home Affairs designations).
-A match results in the transaction being blocked or frozen and reported to the relevant authority.
-
-PEP SCREENING – POLITICALLY EXPOSED PERSONS
-A PEP is a person with a prominent public function (e.g., government official, senior executive of a state-owned enterprise, judge) or a close associate of such a person. Transactions involving PEPs require enhanced due diligence (EDD), meaning more scrutiny of the source of funds and more frequent monitoring.
-
-TRANSACTION MONITORING
-Banks and payment processors use automated systems to monitor all transactions in real time and over time. Triggers for investigation include:
-- A transaction far above a customer's normal spending pattern.
-- Large cash deposits just below reporting thresholds (structuring).
-- Transactions with high-risk countries.
-- Rapid movement of funds through multiple accounts (layering).
-
-CTR – CASH TRANSACTION REPORT
-In many countries, cash transactions above a threshold must be reported to the financial intelligence authority. In India, cash transactions above ₹10 lakh (1,000,000) in a single day must be reported to FIU-IND.
-
-REGULATORY BODIES (INDIA)
-- RBI (Reserve Bank of India): regulates banks and payment systems.
-- SEBI (Securities and Exchange Board of India): regulates securities markets.
-- IRDAI (Insurance Regulatory and Development Authority of India): regulates insurance.
-- FIU-IND (Financial Intelligence Unit – India): receives and analyses suspicious transaction reports.
-- NPCI (National Payments Corporation of India): operates UPI, NEFT, IMPS, and RuPay.
-
-REGULATORY BODIES (GLOBAL)
-- FATF (Financial Action Task Force): sets global AML/CFT standards.
-- BIS (Bank for International Settlements): sets international banking standards (Basel accords).
-- OFAC (Office of Foreign Assets Control, U.S.): administers U.S. sanctions.
-- FinCEN (Financial Crimes Enforcement Network, U.S.): receives U.S. suspicious activity reports.
-
-WHAT HAPPENS WHEN A COMPLIANCE CHECK FAILS?
-Depending on the type of failure, the transaction may be:
-- Automatically blocked (e.g., sanctions match).
-- Placed "on hold" for manual review by a compliance analyst.
-- Allowed to proceed but flagged for reporting (e.g., CTR filed).
-Users whose transactions are blocked for compliance reasons will usually receive a message that the transaction "could not be processed" and are advised to contact their bank. The bank cannot always explain the specific reason for a block due to legal obligations around not "tipping off" the subject of a suspicious activity report.
+Regulatory bodies involved in payment compliance:
+- India: RBI (Reserve Bank of India), FIU-IND, SEBI
+- USA: FinCEN, OFAC, Federal Reserve
+- EU: EBA (European Banking Authority)
+- International: FATF (Financial Action Task Force)

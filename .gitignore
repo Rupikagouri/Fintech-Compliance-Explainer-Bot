@@ -1,59 +1,71 @@
-# Python
+# ── Python ──────────────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *$py.class
 *.pyo
+*.pyd
+.Python
 
-# Virtual environments
+# ── Virtual environments ────────────────────────────────────────────────────
 .venv/
 venv/
+venv (1)/
 env/
 env (1)/
 ENV/
-.env.bak
+.env.local
 
-# Environment / secrets
+# ── Secrets / API keys — NEVER commit these ────────────────────────────────
 .env
 .env.*
 !.env.example
+secrets.json
+credentials.json
 
-# Pytest cache
+# ── Pytest / test cache ─────────────────────────────────────────────────────
 .pytest_cache/
-.cache/
-
-# Coverage
 htmlcov/
 .coverage
-.coverage.*
 coverage.xml
 *.cover
 
-# Distribution / packaging
-dist/
-build/
-*.egg-info/
-*.egg
-MANIFEST
+# ── HuggingFace / sentence-transformers model cache ─────────────────────────
+.cache/
+huggingface/
 
-# Editor
+# ── FAISS / ML artefacts ────────────────────────────────────────────────────
+*.faiss
+*.index
+*.pkl
+*.bin
+*.pt
+*.onnx
+
+# ── Streamlit cache ─────────────────────────────────────────────────────────
+.streamlit/
+
+# ── Editor / IDE ────────────────────────────────────────────────────────────
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 
-# OS
+# ── macOS ────────────────────────────────────────────────────────────────────
 .DS_Store
+.AppleDouble
+.LSOverride
+
+# ── Linux ───────────────────────────────────────────────────────────────────
+*~
+
+# ── Windows ──────────────────────────────────────────────────────────────────
 Thumbs.db
-desktop.ini
+ehthumbs.db
+Desktop.ini
 
-# Jupyter
-.ipynb_checkpoints/
-*.ipynb
-
-# Logs
-*.log
-
-# FAISS index cache (if persisted)
-*.faiss
-*.pkl
+# ── Distribution / packaging ────────────────────────────────────────────────
+dist/
+build/
+*.egg-info/
+.eggs/
